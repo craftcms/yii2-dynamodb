@@ -16,8 +16,8 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
     
-    - name: Run Docker Compose
+    - name: Setup DynamoDB with Docker
       run: docker-compose up -d
 
-    - name: Run PHPUnit test suite
+    - name: Run test suite
       run: composer run-script test
