@@ -4,12 +4,3 @@ services:
         image: amazon/dynamodb-local
         ports:
             - 8000:8000
-    dynamodb-gui:
-        image: aaronshaf/dynamodb-admin
-        ports:
-            - 8001:8001
-        environment:
-          DYNAMO_ENDPOINT: http://dynamodb:8000
-          AWS_REGION: us-east-1
-          AWS_ACCESS_KEY_ID: local
-          AWS_SECRET_ACCESS_KEY: local
