@@ -1,6 +1,6 @@
 <?php
 
-namespace mccallister\dynamodb\helpers;
+namespace pixelandtonic\dynamodb\helpers;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Sdk;

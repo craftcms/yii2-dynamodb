@@ -3,7 +3,7 @@
 namespace tests;
 
 use Aws\DynamoDb\DynamoDbClient;
-use mccallister\dynamodb\helpers\DynamoDBHelper;
+use pixelandtonic\dynamodb\helpers\DynamoDBHelper;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -15,7 +15,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 'key' => 'local',
                 'secret' => 'local',
             ],
-            'region' => 'us-east-1',
+            'region' => 'docker',
             'version' => 'latest',
         ]);
     }

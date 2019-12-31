@@ -1,5 +1,5 @@
 {
-  "name": "mccallister/yii2-dynamodb",
+  "name": "pixelandtonic/yii2-dynamodb",
   "description": "Yii2 implementation of a queue and cache driver for DynamoDB",
   "require-dev": {
     "aws/aws-sdk-php": ">=2.4",
@@ -9,15 +9,16 @@
   "authors": [
     {
       "name": "Jason McCallister",
-      "email": "jason@craftcms.com"
+      "email": "jason@pixelandtonic.com"
     }
   ],
   "require": {
-    "yiisoft/yii2": "~2.0.14"
+    "yiisoft/yii2": "~2.0.14",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
-      "mccallister\\dynamodb\\": "src"
+      "pixelandtonic\\dynamodb\\": "src"
     }
   },
   "autoload-dev": {

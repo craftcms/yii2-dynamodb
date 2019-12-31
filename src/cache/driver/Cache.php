@@ -1,9 +1,10 @@
 <?php
 
-namespace mccallister\dynamodb\cache\driver;
+namespace pixelandtonic\dynamodb\cache\driver;
 
 use Aws\DynamoDb\DynamoDbClient;
-use mccallister\dynamodb\helpers\DynamoDBHelper;
+use Aws\DynamoDb\Exception\DynamoDbException;
+use Aws\DynamoDb\Marshaler;
 use yii\caching\CacheInterface;
 
 class Cache implements CacheInterface
@@ -13,7 +14,7 @@ class Cache implements CacheInterface
      *
      * @var string
      */
-    public $tableName;
+    public $tableName = 'cache-table-test';
 
     /**
      * AWS access key.
@@ -46,11 +47,13 @@ class Cache implements CacheInterface
      */
     protected $client;
 
-    public function init()
+    /**
+     * Cache constructor.
+     * @param DynamoDbClient $client
+     */
+    public function __construct(DynamoDbClient $client)
     {
-        $this->client = (new DynamoDBHelper())->getClient();
-
-        parent::init();
+        $this->client = $client;
     }
 
     /**
@@ -66,7 +69,19 @@ class Cache implements CacheInterface
      */
     public function get($key)
     {
-        throw new \Exception('not yet implemented');
+        try {
+            $result = $this->client->getItem([
+                'ConsistentRead' => true,
+                'TableName' => $this->tableName,
+                'Key' => [
+                    'key' => ['S' => $key],
+                ]
+            ]);
+        } catch (DynamoDbException $e) {
+            // TODO log the exception
+        }
+
+        return $result['Item']['value']['S'];
     }
 
     /**
@@ -90,7 +105,23 @@ class Cache implements CacheInterface
      */
     public function set($key, $value, $duration = null, $dependency = null)
     {
-        throw new \Exception('not yet implemented');
+        if ($duration) {
+            throw new \RuntimeException('duration is not currently supported by this driver');
+        }
+
+        try {
+            $this->client->putItem([
+                'TableName' => $this->tableName,
+                'Item' => [
+                    'key' => ['S' => $key],
+                    'value' => ['S' => json_encode($value)],
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

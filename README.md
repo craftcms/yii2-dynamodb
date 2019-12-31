@@ -17,7 +17,24 @@ composer require mccallister/yii2-dynamodb
 
 ## Usage
 
-TODO
+Configure your cache component to use DynamoDB:
+
+```php
+return [
+    'bootstrap' => [
+        'cache', // The component registers own console commands
+    ],
+    'components' => [
+        'cache' => [
+            'class' => \mccallister\dynamodb\cache\driver\Cache::class,
+            'table' => 'my-app-cache-table',
+            'key' => '<key>', // optional: default to AWS_ACCESS_KEY env var
+            'secret' => '<secret>', // optional: default to AWS_SECRET_KEY env var
+            'region' => '<region>', // optional: default to AWS_REGION env var
+        ],
+    ],
+];
+```
 
 ### Testing
 

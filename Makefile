@@ -1,4 +1,4 @@
-REGION ?= docker
+REGION ?= us-east-1
 CACHE_TABLE_NAME ?= cache-table-test
 ENDPOINT_URL ?= http://localhost:8000
 
