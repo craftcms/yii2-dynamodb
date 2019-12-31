@@ -25,6 +25,9 @@
       "tests\\": "tests"
     }
   },
+  "scripts": {
+    "test": "vendor/bin/phpunit --testdox"
+  },
   "repositories": [
     {
       "type": "composer",
