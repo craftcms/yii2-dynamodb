@@ -3,6 +3,7 @@
 namespace mccallister\dynamodb\cache\driver;
 
 use Aws\DynamoDb\DynamoDbClient;
+use mccallister\dynamodb\helpers\DynamoDBHelper;
 use yii\caching\CacheInterface;
 
 class Cache implements CacheInterface
@@ -44,6 +45,13 @@ class Cache implements CacheInterface
      * @var DynamoDbClient
      */
     protected $client;
+
+    public function init()
+    {
+        $this->client = (new DynamoDBHelper())->getClient();
+
+        parent::init();
+    }
 
     /**
      * @inheritDoc
