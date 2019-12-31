@@ -80,7 +80,7 @@ class Cache implements CacheInterface
             // TODO log the exception
         }
 
-        return $result['Item']['value']['S'];
+        return $result['Item']['value']['S'] ?? null;
     }
 
     /**
@@ -88,7 +88,11 @@ class Cache implements CacheInterface
      */
     public function exists($key)
     {
-        throw new \Exception('not yet implemented');
+        if ($this->get($key)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

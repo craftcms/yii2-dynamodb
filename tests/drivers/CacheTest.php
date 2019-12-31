@@ -37,6 +37,23 @@ class CacheTest extends TestCase
         parent::setUp();
     }
 
+    public function testExists()
+    {
+        // Arrange
+        $key = uniqid('testing-exists-');
+        $cache = new Cache($this->getClient());
+
+        // Act
+        $cache->set($key, ['some' => 'value']);
+        $exists = $cache->exists($key);
+        $doesNotExist = $cache->exists('something-not-here');
+
+        // Assert
+        $this->assertTrue($exists);
+        $this->assertFalse($doesNotExist);
+    }
+
+
     public function testSettingDurationThrowsException()
     {
         // Arrange
