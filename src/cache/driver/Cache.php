@@ -58,7 +58,7 @@ class Cache implements CacheInterface
      */
     public function buildKey($key)
     {
-        // TODO: Implement buildKey() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -66,7 +66,7 @@ class Cache implements CacheInterface
      */
     public function get($key)
     {
-        // TODO: Implement get() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -74,7 +74,7 @@ class Cache implements CacheInterface
      */
     public function exists($key)
     {
-        // TODO: Implement exists() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -82,7 +82,7 @@ class Cache implements CacheInterface
      */
     public function multiGet($keys)
     {
-        // TODO: Implement multiGet() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -90,7 +90,7 @@ class Cache implements CacheInterface
      */
     public function set($key, $value, $duration = null, $dependency = null)
     {
-        // TODO: Implement set() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -98,7 +98,7 @@ class Cache implements CacheInterface
      */
     public function multiSet($items, $duration = 0, $dependency = null)
     {
-        // TODO: Implement multiSet() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -106,7 +106,7 @@ class Cache implements CacheInterface
      */
     public function add($key, $value, $duration = 0, $dependency = null)
     {
-        // TODO: Implement add() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -114,7 +114,7 @@ class Cache implements CacheInterface
      */
     public function multiAdd($items, $duration = 0, $dependency = null)
     {
-        // TODO: Implement multiAdd() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -122,7 +122,7 @@ class Cache implements CacheInterface
      */
     public function delete($key)
     {
-        // TODO: Implement delete() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -130,7 +130,7 @@ class Cache implements CacheInterface
      */
     public function flush()
     {
-        // TODO: Implement flush() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -138,7 +138,7 @@ class Cache implements CacheInterface
      */
     public function getOrSet($key, $callable, $duration = null, $dependency = null)
     {
-        // TODO: Implement getOrSet() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -146,7 +146,7 @@ class Cache implements CacheInterface
      */
     public function offsetExists($offset)
     {
-        // TODO: Implement offsetExists() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -154,7 +154,7 @@ class Cache implements CacheInterface
      */
     public function offsetGet($offset)
     {
-        // TODO: Implement offsetGet() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -162,7 +162,7 @@ class Cache implements CacheInterface
      */
     public function offsetSet($offset, $value)
     {
-        // TODO: Implement offsetSet() method.
+        throw new \Exception('not yet implemented');
     }
 
     /**
@@ -170,6 +170,6 @@ class Cache implements CacheInterface
      */
     public function offsetUnset($offset)
     {
-        // TODO: Implement offsetUnset() method.
+        throw new \Exception('not yet implemented');
     }
 }
