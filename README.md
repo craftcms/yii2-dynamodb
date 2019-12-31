@@ -5,14 +5,14 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/:package_name.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/:package_name)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/:package_name.svg?style=flat-square)](https://packagist.org/packages/spatie/:package_name)
 
-Easily use DynamoDB as a queue or cache using this package.    
+Easily use DynamoDB as a queue or cache using this library in your Yii2 or Craft CMS projects.    
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require mccallister/yii2-dynamodb
+composer require pixelandtonic/yii2-dynamodb
 ```
 
 ## Usage
@@ -26,11 +26,11 @@ return [
     ],
     'components' => [
         'cache' => [
-            'class' => \mccallister\dynamodb\cache\driver\Cache::class,
+            'class' => \pixelandtonic\dynamodb\cache\driver\Cache::class,
             'table' => 'my-app-cache-table',
-            'key' => '<key>', // optional: default to AWS_ACCESS_KEY env var
-            'secret' => '<secret>', // optional: default to AWS_SECRET_KEY env var
-            'region' => '<region>', // optional: default to AWS_REGION env var
+            'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY env var
+            'secret' => '<secret>', // optional: defaults to AWS_SECRET_KEY env var
+            'region' => '<region>', // optional: defaults to AWS_REGION env var
         ],
     ],
 ];
