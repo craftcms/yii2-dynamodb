@@ -26,7 +26,7 @@ return [
     ],
     'components' => [
         'cache' => [
-            'class' => \pixelandtonic\dynamodb\cache\driver\Cache::class,
+            'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
             'table' => 'my-app-cache-table',
             'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY env var
             'secret' => '<secret>', // optional: defaults to AWS_SECRET_KEY env var

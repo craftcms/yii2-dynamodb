@@ -3,7 +3,7 @@
 namespace tests\cache\driver;
 
 use Aws\DynamoDb\Exception\DynamoDbException;
-use pixelandtonic\dynamodb\cache\driver\Cache;
+use pixelandtonic\dynamodb\drivers\Cache;
 use tests\TestCase;
 
 class CacheTest extends TestCase
