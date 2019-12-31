@@ -1,10 +1,9 @@
 <?php
 
-namespace pixelandtonic\dynamodb\cache\driver;
+namespace pixelandtonic\dynamodb\drivers;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
-use Aws\DynamoDb\Marshaler;
 use yii\caching\CacheInterface;
 
 class Cache implements CacheInterface
