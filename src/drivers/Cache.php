@@ -2,18 +2,32 @@
 
 namespace pixelandtonic\dynamodb\drivers;
 
+use Aws\Credentials\CredentialProvider;
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Exception\DynamoDbException;
-use yii\caching\CacheInterface;
+use Yii;
 
-class Cache implements CacheInterface
+class Cache extends \yii\caching\Cache
 {
     /**
      * DynamoDB table name to use for the cache.
      *
      * @var string
      */
-    public $tableName = 'cache-table-test';
+    public $table;
+
+    /**
+     * DynamoDB table name to use for the cache.
+     *
+     * @var string
+     */
+    public $tableKeyAttribute;
+
+    /**
+     * DynamoDB table name to use for the cache.
+     *
+     * @var string
+     */
+    public $tableValueAttribute;
 
     /**
      * AWS access key.
@@ -47,80 +61,50 @@ class Cache implements CacheInterface
     protected $client;
 
     /**
-     * Cache constructor.
-     * @param DynamoDbClient $client
+     * @inheritDoc
      */
-    public function __construct(DynamoDbClient $client)
+    public function init()
     {
-        $this->client = $client;
+        parent::init();
+
+        $this->client = $this->getClient();
     }
 
     /**
      * @inheritDoc
      */
-    public function buildKey($key)
-    {
-        throw new \Exception('not yet implemented');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get($key)
+    protected function getValue($key)
     {
         try {
             $result = $this->client->getItem([
-                'ConsistentRead' => true,
-                'TableName' => $this->tableName,
-                'Key' => [
-                    'key' => ['S' => $key],
-                ]
+                'TableName' => $this->table,
+                'Key' => ['S' => $key],
             ]);
-        } catch (DynamoDbException $e) {
-            // TODO log the exception
+        } catch (\Exception $e) {
+            Yii::warning("Unable to get cache value: {$e->getMessage()}", __METHOD__);
+
+            return null;
         }
 
-        return $result['Item']['value']['S'] ?? null;
+        return $result['Item'][$this->tableValueAttribute]['S'] ?? null;
     }
 
     /**
      * @inheritDoc
      */
-    public function exists($key)
+    protected function setValue($key, $value, $duration)
     {
-        if ($this->get($key)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function multiGet($keys)
-    {
-        throw new \Exception('not yet implemented');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function set($key, $value, $duration = null, $dependency = null)
-    {
-        if ($duration) {
-            throw new \RuntimeException('duration is not currently supported by this driver');
-        }
-
         try {
             $this->client->putItem([
-                'TableName' => $this->tableName,
+                'TableName' => $this->table,
                 'Item' => [
-                    'key' => ['S' => $key],
-                    'value' => ['S' => json_encode($value)],
+                    $this->tableKeyAttribute => ['S' => $key],
+                    $this->tableValueAttribute => ['S' => $value],
                 ]
             ]);
         } catch (\Exception $e) {
+            Yii::warning("Unable to set cache value: {$e->getMessage()}", __METHOD__);
+
             return false;
         }
 
@@ -130,80 +114,92 @@ class Cache implements CacheInterface
     /**
      * @inheritDoc
      */
-    public function multiSet($items, $duration = 0, $dependency = null)
+    protected function addValue($key, $value, $duration)
     {
-        throw new \Exception('not yet implemented');
+        return $this->set($key, $value, $duration);
     }
 
     /**
      * @inheritDoc
      */
-    public function add($key, $value, $duration = 0, $dependency = null)
+    protected function deleteValue($key)
     {
-        throw new \Exception('not yet implemented');
+        try {
+            $this->client->deleteItem([
+                'TableName' => $this->table,
+                'Item' => [
+                    $this->tableKeyAttribute => ['S' => $key],
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Yii::warning("Unable to delete cache value: {$e->getMessage()}", __METHOD__);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * @inheritDoc
      */
-    public function multiAdd($items, $duration = 0, $dependency = null)
+    protected function flushValues()
     {
-        throw new \Exception('not yet implemented');
+        throw new \RuntimeException('flushValues is not implemented yet');
+//        try {
+//            $result = $this->client->scan([
+//                'TableName' => $this->table,
+//            ]);
+//
+//            foreach ($result['Items'] as $item) {
+////                $this->client->deleteItem([
+////                    'TableName' => $this->table,
+////                    'Key' => ['S' => $item[$this->tableKeyAttribute]],
+////                ]);
+//            }
+//
+//        } catch (\Exception $e) {
+//            Yii::error($e->getMessage(), 'cache');
+//
+//            return false;
+//        }
+//
+//        return true;
     }
 
     /**
-     * @inheritDoc
+     * Returns a DynamoDB client.
+     *
+     * @return DynamoDbClient
      */
-    public function delete($key)
+    protected function getClient()
     {
-        throw new \Exception('not yet implemented');
-    }
+        try {
+            if ($this->client) {
+                return $this->client;
+            }
 
-    /**
-     * @inheritDoc
-     */
-    public function flush()
-    {
-        throw new \Exception('not yet implemented');
-    }
+            if ($this->key !== null && $this->secret !== null) {
+                $credentials = [
+                    'key' => $this->key,
+                    'secret' => $this->secret,
+                ];
+            } else {
+                // use default provider if no key and secret passed
+                //see - http://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#credential-profiles
+                $credentials = CredentialProvider::defaultProvider();
+            }
 
-    /**
-     * @inheritDoc
-     */
-    public function getOrSet($key, $callable, $duration = null, $dependency = null)
-    {
-        throw new \Exception('not yet implemented');
-    }
+            $this->client = new DynamoDbClient([
+                'credentials' => $credentials,
+                'region' => $this->region,
+                'endpoint' => 'http://dynamodb:8000',
+                'version' => $this->version,
+            ]);
+        } catch (\Exception $e) {
+            Yii::error($e->getMessage(), 'cache-driver');
+        }
 
-    /**
-     * @inheritDoc
-     */
-    public function offsetExists($offset)
-    {
-        throw new \Exception('not yet implemented');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function offsetGet($offset)
-    {
-        throw new \Exception('not yet implemented');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function offsetSet($offset, $value)
-    {
-        throw new \Exception('not yet implemented');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function offsetUnset($offset)
-    {
-        throw new \Exception('not yet implemented');
+        return $this->client;
     }
 }
