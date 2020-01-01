@@ -1,9 +1,8 @@
 # Yii2 DynamoDB Cache and Queue Driver Implementation
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/pixelandtonic/yii2-dynamodb.svg?style=flat-square)](https://packagist.org/packages/pixelandtonic/yii2-dynamodb)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/pixelandtonic/yii2-dynamodb/run-tests?label=tests)](https://github.com/pixelandtonic/yii2-dynamodb/actions?query=workflow%3Arun-tests+branch%3Amaster)
-[![Quality Score](https://img.shields.io/scrutinizer/g/pixelandtonic/yii2-dynamodb.svg?style=flat-square)](https://scrutinizer-ci.com/g/pixelandtonic/yii2-dynamodb)
 [![Total Downloads](https://img.shields.io/packagist/dt/pixelandtonic/yii2-dynamodb.svg?style=flat-square)](https://packagist.org/packages/pixelandtonic/yii2-dynamodb)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/pixelandtonic/yii2-dynamodb/run-tests?label=tests)](https://github.com/pixelandtonic/yii2-dynamodb/actions?query=workflow%3Arun-tests+branch%3Amaster)
 
 Easily use DynamoDB as a queue or cache using this library in your Yii2 or Craft CMS projects.    
 
@@ -17,7 +16,17 @@ composer require pixelandtonic/yii2-dynamodb
 
 ## Usage
 
-Configure your cache component to use DynamoDB:
+This package provides two drivers for DynamoDB; queue and cache.
+
+### Cache Component
+
+#### Create DynamoDB Table
+
+TODO
+
+#### Configure Cache Component
+
+In your `app.php`, configure the `cache` component to use the driver.
 
 ```php
 return [
@@ -41,14 +50,6 @@ return [
 ``` bash
 composer test
 ```
-
-### Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
