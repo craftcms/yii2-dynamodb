@@ -7,6 +7,24 @@ use tests\TestCase;
 
 class CacheTest extends TestCase
 {
+    public function testFlush()
+    {
+        // Arrange
+        $key1 = uniqid('testing-flush-');
+        $key2 = uniqid('testing-flush-2');
+        $cache = new Cache($this->getClient());
+        $cache->set($key1, ['some' => 'value']);
+        $cache->set($key2, ['another' => 'value']);
+
+        // Act
+        $cache->flush();
+
+        // Assert
+        $this->assertFalse($cache->exists($key1));
+        $this->assertFalse($cache->exists($key2));
+    }
+
+
     public function testDeleteValue()
     {
         // Arrange

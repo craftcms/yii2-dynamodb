@@ -164,26 +164,26 @@ class Cache extends \yii\caching\Cache
      */
     protected function flushValues()
     {
-        throw new \RuntimeException('flushValues is not implemented yet');
-//        try {
-//            $result = $this->client->scan([
-//                'TableName' => $this->table,
-//            ]);
-//
-//            foreach ($result['Items'] as $item) {
-////                $this->client->deleteItem([
-////                    'TableName' => $this->table,
-////                    'Key' => ['S' => $item[$this->tableKeyAttribute]],
-////                ]);
-//            }
-//
-//        } catch (\Exception $e) {
-//            Yii::error($e->getMessage(), 'cache');
-//
-//            return false;
-//        }
-//
-//        return true;
+        try {
+            $result = $this->client->scan([
+                'TableName' => $this->table,
+            ]);
+
+            if ($result['Items'] === null) {
+                Yii::error("No items to flush", __METHOD__);
+            }
+
+            foreach ($result['Items'] as $item) {
+                $key = $this->buildKey($item[$this->tableKeyAttribute]['S']);
+                $this->delete($key);
+            }
+        } catch (\Exception $e) {
+            Yii::error("Unable to create flush cache: {$e->getMessage()}", __METHOD__);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
