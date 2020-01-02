@@ -7,20 +7,6 @@ use tests\TestCase;
 
 class CacheTest extends TestCase
 {
-    public function testExistsReturnsFalseWhenNotFound()
-    {
-        // Arrange
-        $key = uniqid('testing-exists-');
-        $client = $this->getClient();
-        $cache = new Cache($client);
-
-        // Act
-        $doesNotExist = $cache->exists($key);
-
-        // Assert
-        $this->assertFalse($doesNotExist);
-    }
-
     public function testExists()
     {
         // Arrange
@@ -31,9 +17,11 @@ class CacheTest extends TestCase
         // Act
         $cache->set($key, ['some' => 'value']);
         $exists = $cache->exists($key);
+        $doesNotExist = $cache->exists('nothing');
 
         // Assert
         $this->assertTrue($exists);
+        $this->assertFalse($doesNotExist);
     }
 
     public function testSet()
