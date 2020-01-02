@@ -23,7 +23,7 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-suggest
     
     - name: Setup dynamodb with Docker
-      run: docker-compose up -d
+      run: docker-compose up -d dynamodb
 
     - name: Run test suite
       run: composer run-script test

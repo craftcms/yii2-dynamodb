@@ -186,14 +186,14 @@ class Cache extends \yii\caching\Cache
                 ];
             } else {
                 // use default provider if no key and secret passed
-                //see - http://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#credential-profiles
+                // see - http://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#credential-profiles
                 $credentials = CredentialProvider::defaultProvider();
             }
 
             $this->client = new DynamoDbClient([
                 'credentials' => $credentials,
                 'region' => $this->region,
-                'endpoint' => 'http://dynamodb:8000',
+                'endpoint' => 'http://localhost:8000',
                 'version' => $this->version,
             ]);
         } catch (\Exception $e) {

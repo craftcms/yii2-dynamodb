@@ -2,46 +2,17 @@
 
 namespace tests\cache\driver;
 
-use Aws\DynamoDb\Exception\DynamoDbException;
 use pixelandtonic\dynamodb\drivers\Cache;
 use tests\TestCase;
 
 class CacheTest extends TestCase
 {
-    public function setUp(): void
-    {
-        try {
-            $this->getClient()->createTable([
-                'TableName' => 'cache-table-test',
-                'KeySchema' => [
-                    [
-                        'AttributeName' => 'key',
-                        'KeyType' => 'HASH'
-                    ],
-                ],
-                'AttributeDefinitions' => [
-                    [
-                        'AttributeName' => 'key',
-                        'AttributeType' => 'S'
-                    ],
-                ],
-                'ProvisionedThroughput' => [
-                    'ReadCapacityUnits' => 10,
-                    'WriteCapacityUnits' => 10
-                ]
-            ]);
-        } catch (DynamoDbException $e) {
-            // TODO make this better
-        }
-
-        parent::setUp();
-    }
-
     public function testExists()
     {
         // Arrange
         $key = uniqid('testing-exists-');
-        $cache = new Cache($this->getClient());
+        $client = $this->getClient();
+        $cache = new Cache($client);
 
         // Act
         $cache->set($key, ['some' => 'value']);
@@ -52,21 +23,6 @@ class CacheTest extends TestCase
         $this->assertTrue($exists);
         $this->assertFalse($doesNotExist);
     }
-
-
-    public function testSettingDurationThrowsException()
-    {
-        // Arrange
-        $key = uniqid('testing-duration-exception-');
-        $cache = new Cache($this->getClient());
-
-        // Assert
-        $this->expectException(\RuntimeException::class);
-
-        // Act
-        $cache->set($key, ['some' => 'value'], 5);
-    }
-
 
     public function testSet()
     {
