@@ -27,6 +27,10 @@ jobs:
 
     - name: Create DynamoDB tables
       run: make tables
+      env:
+        AWS_REGION: local
+        AWS_ACCESS_KEY_ID: local
+        AWS_SECRET_ACCESS_KEY: local
 
     - name: Run test suite
       run: composer run-script test
