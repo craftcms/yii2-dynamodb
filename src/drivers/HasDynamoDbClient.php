@@ -4,25 +4,26 @@ namespace pixelandtonic\dynamodb\drivers;
 
 use Aws\Credentials\CredentialProvider;
 use Aws\DynamoDb\DynamoDbClient;
+use Yii;
 
 trait HasDynamoDbClient
 {
     /**
-     * DynamoDB table name to use for the session.
+     * DynamoDB table name to use for the data.
      *
      * @var string
      */
     public $table;
 
     /**
-     * DynamoDB table attribute to use for the session id.
+     * DynamoDB table attribute to use for the id.
      *
      * @var string
      */
     public $tableIdAttribute = 'id';
 
     /**
-     * DynamoDB table attribute to use for the session data.
+     * DynamoDB table attribute to use for data.
      *
      * @var string
      */
@@ -43,7 +44,7 @@ trait HasDynamoDbClient
     public $secret;
 
     /**
-     * Region where queue is hosted.
+     * Region where dynamodb table is hosted.
      *
      * @var string
      */
