@@ -11,12 +11,13 @@ return [
     'components' => [
         'cache' => [
             'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
-            'key' => 'local',
-            'secret' => 'local',
-            'region' => 'local',
             'table' => 'cache-test',
             'tableKeyAttribute' => 'key',
             'tableValueAttribute' => 'value',
+            'key' => 'local',
+            'secret' => 'local',
+            'region' => 'local',
+            'endpoint' => 'http://localhost:8000',
         ],
         'request' => [
             'cookieValidationKey' => 'dipUyxo0rv924WuhjmEk',

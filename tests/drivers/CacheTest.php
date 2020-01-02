@@ -7,6 +7,22 @@ use tests\TestCase;
 
 class CacheTest extends TestCase
 {
+    public function testDeleteValue()
+    {
+        // Arrange
+        $key = uniqid('testing-delete-');
+        $client = $this->getClient();
+        $cache = new Cache($client);
+        $cache->set($key, ['some' => 'value']);
+
+        // Act
+        $deleted = $cache->delete($key);
+
+        // Assert
+        $this->assertTrue($deleted);
+        $this->assertFalse($cache->exists($key));
+    }
+
     public function testExists()
     {
         // Arrange
@@ -24,7 +40,7 @@ class CacheTest extends TestCase
         $this->assertFalse($doesNotExist);
     }
 
-    public function testSet()
+    public function testSetValue()
     {
         // Arrange
         $key = uniqid('testing-set-');
@@ -37,7 +53,7 @@ class CacheTest extends TestCase
         $this->assertTrue($saved);
     }
 
-    public function testGet()
+    public function testGetValue()
     {
         $key = uniqid('testing-get-');
         $cache = new Cache($this->getClient());

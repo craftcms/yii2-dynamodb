@@ -5,6 +5,7 @@ namespace pixelandtonic\dynamodb\drivers;
 use Aws\Credentials\CredentialProvider;
 use Aws\DynamoDb\DynamoDbClient;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class Cache extends \yii\caching\Cache
 {
@@ -42,10 +43,16 @@ class Cache extends \yii\caching\Cache
     public $secret;
 
     /**
-     * region where queue is hosted.
+     * Region where queue is hosted.
      * @var string
      */
     public $region = '';
+
+    /**
+     * Endpoint to DynamoDB (used for local development or when using DAX).
+     * @var string
+     */
+    public $endpoint;
 
     /**
      * API version.
@@ -139,9 +146,9 @@ class Cache extends \yii\caching\Cache
 
             $this->client->deleteItem([
                 'TableName' => $this->table,
-                'Item' => [
+                'Key' => [
                     $this->tableKeyAttribute => ['S' => $key],
-                ]
+                ],
             ]);
         } catch (\Exception $e) {
             Yii::warning("Unable to delete cache value: {$e->getMessage()}", __METHOD__);
@@ -202,14 +209,19 @@ class Cache extends \yii\caching\Cache
                 $credentials = CredentialProvider::defaultProvider();
             }
 
-            $this->client = new DynamoDbClient([
+            $config = [
                 'credentials' => $credentials,
                 'region' => $this->region,
-                'endpoint' => 'http://localhost:8000',
                 'version' => $this->version,
-            ]);
+            ];
+
+            if (!is_null($this->endpoint)) {
+                $config['endpoint'] = $this->endpoint;
+            }
+
+            $this->client = new DynamoDbClient($config);
         } catch (\Exception $e) {
-            Yii::error($e->getMessage(), 'cache-driver');
+            Yii::error("Unable to create cache client: {$e->getMessage()}", __METHOD__);
         }
 
         return $this->client;
