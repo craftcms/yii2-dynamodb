@@ -20,9 +20,18 @@ This package provides two drivers for DynamoDB; queue and cache.
 
 ### Cache Component
 
-#### Create DynamoDB Table
+#### Create DynamoDB Tables
 
-TODO
+Since DynamoDB is a NoSQL database, the only key you have to specify is the primary key. You can use the following AWS CLI command to generate a table.
+
+```shell script
+aws dynamodb create-table --table-name=session-table \
+	--attribute-definitions=AttributeName=id,AttributeType=S \
+	--key-schema=AttributeName=id,KeyType=HASH \
+	--billing-mode=PAY_PER_REQUEST
+```
+
+> Note: Since the ID can contain more than numbers, it needs to be specified as a string in DynamoDB.
 
 #### Configure Cache Component
 
@@ -39,7 +48,7 @@ return [
             'table' => 'cache-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
-            'endpoint' => 'http://localhost:8000', // optional: used for local development or when using DAX
+            'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
             'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
             'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
             'region' => '<region>', // optional: defaults to AWS_REGION env var
@@ -63,7 +72,7 @@ return [
             'table' => 'session-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
-            'endpoint' => 'http://localhost:8000', // optional: used for local development or when using DAX
+            'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
             'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
             'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
             'region' => '<region>', // optional: defaults to AWS_REGION env var
@@ -73,6 +82,12 @@ return [
 ```
 
 ### Testing
+
+Tests run against a local DynamoDB table using Docker. To run tests, you must run the following:
+
+```bash
+docker-compose up -d
+```
 
 ``` bash
 composer test
