@@ -2,92 +2,25 @@
 
 namespace pixelandtonic\dynamodb\drivers;
 
-use Aws\Credentials\CredentialProvider;
 use Aws\DynamoDb\DynamoDbClient;
 use Yii;
 
 class Cache extends \yii\caching\Cache
 {
-    /**
-     * DynamoDB table name to use for the cache.
-     *
-     * @var string
-     */
-    public $table;
-
-    /**
-     * DynamoDB table name to use for the cache.
-     *
-     * @var string
-     */
-    public $tableKeyAttribute = 'key';
-
-    /**
-     * DynamoDB table name to use for the cache.
-     *
-     * @var string
-     */
-    public $tableValueAttribute = 'value';
-
-    /**
-     * AWS access key.
-     * @var string|null
-     */
-    public $key;
-
-    /**
-     * AWS secret.
-     * @var string|null
-     */
-    public $secret;
-
-    /**
-     * Region where queue is hosted.
-     * @var string
-     */
-    public $region = '';
-
-    /**
-     * Endpoint to DynamoDB (used for local development or when using DAX).
-     * @var string
-     */
-    public $endpoint;
-
-    /**
-     * API version.
-     * @var string
-     */
-    public $version = 'latest';
-
-    /**
-     * DynamoDB client use for making requests.
-     *
-     * @var DynamoDbClient
-     */
-    protected $client;
-
-    /**
-     * @inheritDoc
-     */
-    public function init()
-    {
-        parent::init();
-
-        $this->client = $this->getClient();
-    }
+    use HasDynamoDbClient;
 
     /**
      * @inheritDoc
      */
     protected function getValue($key)
     {
-        $key = $this->buildKey($key);
-
         try {
+            $key = $this->buildKey($key);
+
             $result = $this->client->getItem([
                 'TableName' => $this->table,
                 'Key' => [
-                    $this->tableKeyAttribute => ['S' => $key]
+                    $this->tableIdAttribute => ['S' => $key]
                 ]
             ]);
         } catch (\Exception $e) {
@@ -100,7 +33,7 @@ class Cache extends \yii\caching\Cache
             return false;
         }
 
-        return $result['Item'][$this->tableValueAttribute]['S'] ?? null;
+        return $result['Item'][$this->tableDataAttribute]['S'] ?? null;
     }
 
     /**
@@ -114,8 +47,8 @@ class Cache extends \yii\caching\Cache
             $this->client->putItem([
                 'TableName' => $this->table,
                 'Item' => [
-                    $this->tableKeyAttribute => ['S' => $key],
-                    $this->tableValueAttribute => ['S' => $value],
+                    $this->tableIdAttribute => ['S' => $key],
+                    $this->tableDataAttribute => ['S' => $value],
                 ]
             ]);
         } catch (\Exception $e) {
@@ -146,7 +79,7 @@ class Cache extends \yii\caching\Cache
             $this->client->deleteItem([
                 'TableName' => $this->table,
                 'Key' => [
-                    $this->tableKeyAttribute => ['S' => $key],
+                    $this->tableIdAttribute => ['S' => $key],
                 ],
             ]);
         } catch (\Exception $e) {
@@ -164,17 +97,18 @@ class Cache extends \yii\caching\Cache
     protected function flushValues()
     {
         try {
-            $result = $this->client->scan([
+            $results = $this->client->scan([
                 'TableName' => $this->table,
             ]);
 
-            if ($result['Items'] === null) {
+            if ($results['Items'] === null) {
                 Yii::error("No items to flush", __METHOD__);
             }
 
-            foreach ($result['Items'] as $item) {
-                $key = $this->buildKey($item[$this->tableKeyAttribute]['S']);
-                $this->delete($key);
+            foreach ($results['Items'] as $item) {
+                $this->delete($this->buildKey(
+                    $item[$this->tableIdAttribute]['S'])
+                );
             }
         } catch (\Exception $e) {
             Yii::error("Unable to create flush cache: {$e->getMessage()}", __METHOD__);
@@ -183,46 +117,5 @@ class Cache extends \yii\caching\Cache
         }
 
         return true;
-    }
-
-    /**
-     * Returns a DynamoDB client.
-     *
-     * @return DynamoDbClient
-     */
-    protected function getClient()
-    {
-        try {
-            if ($this->client) {
-                return $this->client;
-            }
-
-            if ($this->key !== null && $this->secret !== null) {
-                $credentials = [
-                    'key' => $this->key,
-                    'secret' => $this->secret,
-                ];
-            } else {
-                // use default provider if no key and secret passed
-                // see - http://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#credential-profiles
-                $credentials = CredentialProvider::defaultProvider();
-            }
-
-            $config = [
-                'credentials' => $credentials,
-                'region' => $this->region,
-                'version' => $this->version,
-            ];
-
-            if (!is_null($this->endpoint)) {
-                $config['endpoint'] = $this->endpoint;
-            }
-
-            $this->client = new DynamoDbClient($config);
-        } catch (\Exception $e) {
-            Yii::error("Unable to create cache client: {$e->getMessage()}", __METHOD__);
-        }
-
-        return $this->client;
     }
 }

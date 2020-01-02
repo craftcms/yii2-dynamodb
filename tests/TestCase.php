@@ -39,4 +39,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         return \Yii::$app->getCache();
     }
+
+    protected function getSession()
+    {
+        return \Yii::$app->getSession();
+    }
 }

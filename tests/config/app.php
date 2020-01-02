@@ -12,8 +12,14 @@ return [
         'cache' => [
             'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
             'table' => 'cache-test',
-            'tableKeyAttribute' => 'key',
-            'tableValueAttribute' => 'value',
+            'key' => 'local',
+            'secret' => 'local',
+            'region' => 'local',
+            'endpoint' => 'http://localhost:8000',
+        ],
+        'session' => [
+            'class' => \pixelandtonic\dynamodb\drivers\Session::class,
+            'table' => 'session-test',
             'key' => 'local',
             'secret' => 'local',
             'region' => 'local',

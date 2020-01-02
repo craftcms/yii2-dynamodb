@@ -31,14 +31,38 @@ In your `app.php`, configure the `cache` component to use the driver.
 ```php
 return [
     'bootstrap' => [
-        'cache', // The component registers own console commands
+        'cache',
     ],
     'components' => [
         'cache' => [
             'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
             'table' => 'cache-test',
-            'tableKeyAttribute' => 'key', // optional: defaults to key
-            'tableValueAttribute' => 'value', // optional: defaults to value
+            'tableIdAttribute' => 'id', // optional: defaults to id
+            'tableDataAttribute' => 'data', // optional: defaults to data
+            'endpoint' => 'http://localhost:8000', // optional: used for local development or when using DAX
+            'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
+            'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
+            'region' => '<region>', // optional: defaults to AWS_REGION env var
+        ],
+    ],
+];
+```
+
+#### Configure Session Component
+
+In your `app.php`, configure the `session` component to use the driver.
+
+```php
+return [
+    'bootstrap' => [
+        'session',
+    ],
+    'components' => [
+        'session' => [
+            'class' => \pixelandtonic\dynamodb\drivers\Session::class,
+            'table' => 'session-test',
+            'tableIdAttribute' => 'id', // optional: defaults to id
+            'tableDataAttribute' => 'data', // optional: defaults to data
             'endpoint' => 'http://localhost:8000', // optional: used for local development or when using DAX
             'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
             'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
