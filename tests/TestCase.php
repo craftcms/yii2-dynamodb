@@ -10,24 +10,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $config = require __DIR__ . '/config/app.php';
 
-        $this->mockWebApplication($config);
+        $this->mockApplication($config);
 
         parent::setUp();
-    }
-
-    /**
-     * Populates Yii::$app with a new application
-     * The application will be destroyed on tearDown() automatically.
-     * @param array $config The application configuration, if needed
-     * @param string $appClass name of the application class to create
-     */
-    protected function mockApplication(array $config = [], $appClass = '\yii\console\Application')
-    {
-        new $appClass(ArrayHelper::merge([
-            'id' => 'yii2-dynamodb-test-app',
-            'basePath' => __DIR__,
-            'vendorPath' => dirname(__DIR__) . '/vendor',
-        ], $config));
     }
 
     /**
@@ -36,7 +21,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * @param array $config
      * @param string $appClass
      */
-    protected function mockWebApplication(array $config = [], $appClass = '\yii\web\Application')
+    protected function mockApplication(array $config = [], $appClass = '\yii\web\Application')
     {
         new $appClass(ArrayHelper::merge([
             'id' => 'yii2-dynamodb-test-app',
@@ -50,7 +35,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ], $config));
     }
 
-    protected function getClient()
+    protected function getCache()
     {
         return \Yii::$app->getCache();
     }
