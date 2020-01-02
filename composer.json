@@ -1,10 +1,6 @@
 {
   "name": "pixelandtonic/yii2-dynamodb",
   "description": "Yii2 implementation of a queue and cache driver for DynamoDB",
-  "require-dev": {
-    "aws/aws-sdk-php": ">=2.4",
-    "phpunit/phpunit": "^8.5"
-  },
   "license": "MIT",
   "authors": [
     {
@@ -15,6 +11,10 @@
   "require": {
     "yiisoft/yii2": "~2.0.14",
     "ext-json": "*"
+  },
+  "require-dev": {
+    "aws/aws-sdk-php": ">=2.4",
+    "phpunit/phpunit": "^8.5"
   },
   "autoload": {
     "psr-4": {
