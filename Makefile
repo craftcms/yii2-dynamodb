@@ -1,5 +1,5 @@
-REGION ?= us-east-1
-CACHE_TABLE_NAME ?= cache-table-test
+REGION ?= local
+CACHE_TABLE_NAME ?= cache-test
 ENDPOINT_URL ?= http://localhost:8000
 
 tables:

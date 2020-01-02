@@ -75,15 +75,23 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValue($key)
     {
+        $key = $this->buildKey($key);
+
         try {
             $result = $this->client->getItem([
                 'TableName' => $this->table,
-                'Key' => ['S' => $key],
+                'Key' => [
+                    $this->tableKeyAttribute => ['S' => $key]
+                ]
             ]);
         } catch (\Exception $e) {
             Yii::warning("Unable to get cache value: {$e->getMessage()}", __METHOD__);
 
             return null;
+        }
+
+        if (is_null($result['Item'])) {
+            return false;
         }
 
         return $result['Item'][$this->tableValueAttribute]['S'] ?? null;
@@ -94,6 +102,8 @@ class Cache extends \yii\caching\Cache
      */
     protected function setValue($key, $value, $duration)
     {
+        $key = $this->buildKey($key);
+
         try {
             $this->client->putItem([
                 'TableName' => $this->table,
@@ -125,6 +135,8 @@ class Cache extends \yii\caching\Cache
     protected function deleteValue($key)
     {
         try {
+            $key = $this->buildKey($key);
+
             $this->client->deleteItem([
                 'TableName' => $this->table,
                 'Item' => [

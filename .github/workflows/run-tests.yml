@@ -22,8 +22,11 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
     
-    - name: Setup dynamodb with Docker
+    - name: Setup DynamoDB
       run: docker-compose up -d dynamodb
+
+    - name: Create DynamoDB tables
+        run: docker-compose up -d dynamodb
 
     - name: Run test suite
       run: composer run-script test
