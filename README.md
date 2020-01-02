@@ -36,9 +36,12 @@ return [
     'components' => [
         'cache' => [
             'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
-            'table' => 'my-app-cache-table',
-            'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY env var
-            'secret' => '<secret>', // optional: defaults to AWS_SECRET_KEY env var
+            'table' => 'cache-test',
+            'tableKeyAttribute' => 'key', // optional: defaults to key
+            'tableValueAttribute' => 'value', // optional: defaults to value
+            'endpoint' => 'http://localhost:8000', // optional: used for local development or when using DAX
+            'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
+            'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
             'region' => '<region>', // optional: defaults to AWS_REGION env var
         ],
     ],

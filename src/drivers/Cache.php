@@ -5,7 +5,6 @@ namespace pixelandtonic\dynamodb\drivers;
 use Aws\Credentials\CredentialProvider;
 use Aws\DynamoDb\DynamoDbClient;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 class Cache extends \yii\caching\Cache
 {
@@ -21,14 +20,14 @@ class Cache extends \yii\caching\Cache
      *
      * @var string
      */
-    public $tableKeyAttribute;
+    public $tableKeyAttribute = 'key';
 
     /**
      * DynamoDB table name to use for the cache.
      *
      * @var string
      */
-    public $tableValueAttribute;
+    public $tableValueAttribute = 'value';
 
     /**
      * AWS access key.
