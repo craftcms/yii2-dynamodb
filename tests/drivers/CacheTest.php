@@ -12,7 +12,7 @@ class CacheTest extends TestCase
         // Arrange
         $key1 = uniqid('testing-flush-');
         $key2 = uniqid('testing-flush-2');
-        $cache = new Cache($this->getClient());
+        $cache = new Cache($this->getCache());
         $cache->set($key1, ['some' => 'value']);
         $cache->set($key2, ['another' => 'value']);
 
@@ -29,7 +29,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-delete-');
-        $client = $this->getClient();
+        $client = $this->getCache();
         $cache = new Cache($client);
         $cache->set($key, ['some' => 'value']);
 
@@ -45,7 +45,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-exists-');
-        $client = $this->getClient();
+        $client = $this->getCache();
         $cache = new Cache($client);
 
         // Act
@@ -62,7 +62,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-set-');
-        $cache = new Cache($this->getClient());
+        $cache = new Cache($this->getCache());
 
         // Act
         $saved = $cache->set($key, ['some' => 'value']);
@@ -74,7 +74,7 @@ class CacheTest extends TestCase
     public function testGetValue()
     {
         $key = uniqid('testing-get-');
-        $cache = new Cache($this->getClient());
+        $cache = new Cache($this->getCache());
         $encoded = ['some' => 'value'];
         $cache->set($key, ['some' => 'value']);
 
