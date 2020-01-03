@@ -44,7 +44,7 @@ class Queue extends \yii\queue\Queue
                 ]
             ]);
         } catch (\Exception $e) {
-            Yii::warning("Unable to push message: {$e->getMessage()}", __METHOD__);
+            Yii::warning("Unable to retrieve status of the job: {$e->getMessage()}", __METHOD__);
 
             return null;
         }
@@ -89,7 +89,7 @@ class Queue extends \yii\queue\Queue
                 'done_at' => [
                     'N' => 0,
                 ],
-            ]
+            ],
         ];
     }
 }

@@ -30,6 +30,7 @@ class QueueTest extends TestCase
 
         // Assert
         $this->assertNotNull($id);
+        $this->assertStringContainsString('queue-prefix', $id);
     }
 
     public function testStatus()
@@ -45,6 +46,4 @@ class QueueTest extends TestCase
         // Assert
         $this->assertNotNull($status);
     }
-
-
 }
