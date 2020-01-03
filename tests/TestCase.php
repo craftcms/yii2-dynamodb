@@ -44,4 +44,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         return \Yii::$app->getSession();
     }
+
+    protected function getQueue()
+    {
+        return \Yii::$app->get('queue');
+    }
 }

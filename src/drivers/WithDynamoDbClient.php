@@ -6,7 +6,7 @@ use Aws\Credentials\CredentialProvider;
 use Aws\DynamoDb\DynamoDbClient;
 use Yii;
 
-trait HasClient
+trait WithDynamoDbClient
 {
     /**
      * DynamoDB table name to use for the data.

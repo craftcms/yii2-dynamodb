@@ -6,7 +6,7 @@ use Yii;
 
 class Session extends \yii\web\Session
 {
-    use HasClient;
+    use WithDynamoDbClient;
 
     /**
      * @var string a string prefixed to every cache key so that it is unique. If not set,

@@ -29,8 +29,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-delete-');
-        $client = $this->getCache();
-        $cache = new Cache($client);
+        $cache = new Cache($this->getCache());
         $cache->set($key, ['some' => 'value']);
 
         // Act
@@ -45,8 +44,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-exists-');
-        $client = $this->getCache();
-        $cache = new Cache($client);
+        $cache = new Cache($this->getCache());
 
         // Act
         $cache->set($key, ['some' => 'value']);

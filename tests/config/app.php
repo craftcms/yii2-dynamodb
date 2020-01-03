@@ -25,6 +25,14 @@ return [
             'region' => 'local',
             'endpoint' => 'http://localhost:8000',
         ],
+        'queue' => [
+            'class' => \pixelandtonic\dynamodb\drivers\Queue::class,
+            'table' => 'queue-test',
+            'key' => 'local',
+            'secret' => 'local',
+            'region' => 'local',
+            'endpoint' => 'http://localhost:8000',
+        ],
         'request' => [
             'cookieValidationKey' => 'dipUyxo0rv924WuhjmEk',
             'scriptFile' => __DIR__ . '/index.php',

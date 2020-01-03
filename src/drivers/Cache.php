@@ -6,7 +6,7 @@ use Yii;
 
 class Cache extends \yii\caching\Cache
 {
-    use HasClient;
+    use WithDynamoDbClient;
 
     /**
      * @inheritDoc
