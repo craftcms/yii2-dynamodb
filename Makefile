@@ -8,21 +8,19 @@ AWS_SECRET_ACCESS_KEY = local
 
 tables:
 	aws --endpoint-url=${ENDPOINT_URL} --region=${REGION} \
-	dynamodb create-table --table-name=${CACHE_TABLE_NAME} \
-	--attribute-definitions=AttributeName=id,AttributeType=S \
-	--key-schema=AttributeName=id,KeyType=HASH \
-	--billing-mode=PAY_PER_REQUEST
-
+		dynamodb create-table --table-name=${CACHE_TABLE_NAME} \
+		--attribute-definitions=AttributeName=id,AttributeType=S \
+		--key-schema=AttributeName=id,KeyType=HASH \
+		--billing-mode=PAY_PER_REQUEST && \
 	aws --endpoint-url=${ENDPOINT_URL} --region=${REGION} \
     	dynamodb create-table --table-name=${SESSION_TABLE_NAME} \
     	--attribute-definitions=AttributeName=id,AttributeType=S \
     	--key-schema=AttributeName=id,KeyType=HASH \
-    	--billing-mode=PAY_PER_REQUEST
-
+    	--billing-mode=PAY_PER_REQUEST && \
     aws --endpoint-url=${ENDPOINT_URL} --region=${REGION} \
-        	dynamodb create-table --table-name=${QUEUE_TABLE_NAME} \
-        	--attribute-definitions=AttributeName=id,AttributeType=S \
-        	--key-schema=AttributeName=id,KeyType=HASH \
-        	--billing-mode=PAY_PER_REQUEST
+    	dynamodb create-table --table-name=${QUEUE_TABLE_NAME} \
+    	--attribute-definitions=AttributeName=id,AttributeType=S \
+    	--key-schema=AttributeName=id,KeyType=HASH \
+    	--billing-mode=PAY_PER_REQUEST
 
 
