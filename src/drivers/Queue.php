@@ -8,21 +8,22 @@ class Queue extends \yii\queue\Queue
 {
     use WithDynamoDbClient;
 
+    protected $prefix = 'queue-prefix';
+
     /**
      * @inheritDoc
      */
     protected function pushMessage($message, $ttr, $delay, $priority)
     {
         try {
-            $prefix = 'queue-prefix';
-            $id = uniqid($prefix);
+            $id = uniqid($this->prefix);
 
             $params = $this->buildItem($id, $message, $ttr, $delay, $priority);
-            $result = $this->client->putItem($params);
+            $this->client->putItem($params);
         } catch (\Exception $e) {
             Yii::warning("Unable to push message: {$e->getMessage()}", __METHOD__);
 
-            return '';
+            return null;
         }
 
         return $id;
@@ -33,7 +34,22 @@ class Queue extends \yii\queue\Queue
      */
     public function status($id)
     {
-        // TODO: Implement status() method.
+        try {
+            $result = $this->client->getItem([
+                'TableName' => $this->table,
+                'Key' => [
+                    $this->tableIdAttribute => [
+                        'S' => $id,
+                    ]
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Yii::warning("Unable to push message: {$e->getMessage()}", __METHOD__);
+
+            return null;
+        }
+
+        return $result['Item'];
     }
 
     protected function buildItem($id, $message, $ttr, $delay, $priority): array
@@ -47,7 +63,7 @@ class Queue extends \yii\queue\Queue
                     'S' => $id,
                 ],
                 'channel' => [
-                    'B' => $prefix,
+                    'S' => $this->prefix,
                 ],
                 'job' => [
                     'S' => $message,
@@ -62,7 +78,7 @@ class Queue extends \yii\queue\Queue
                     'N' => $delay,
                 ],
                 'priority' => [
-                    'S' => $priority,
+                    'S' => $priority ?? 'default',
                 ],
                 'reserved_at' => [
                     'N' => 0,
