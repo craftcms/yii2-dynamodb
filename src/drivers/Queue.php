@@ -18,8 +18,12 @@ class Queue extends \yii\queue\Queue
         try {
             $id = uniqid($this->prefix);
 
-            $params = $this->buildItem($id, $message, $ttr, $delay, $priority);
-            $this->client->putItem($params);
+            $item = $this->buildItem($id, $message, $ttr, $delay, $priority);
+
+            $this->client->putItem([
+                'TableName' => $this->table,
+                'Item' => $item,
+            ]);
         } catch (\Exception $e) {
             Yii::warning("Unable to push message: {$e->getMessage()}", __METHOD__);
 
@@ -57,38 +61,35 @@ class Queue extends \yii\queue\Queue
         $now = time();
 
         return [
-            'TableName' => $this->table,
-            'Item' => [
-                $this->tableIdAttribute => [
-                    'S' => $id,
-                ],
-                'channel' => [
-                    'S' => $this->prefix,
-                ],
-                'job' => [
-                    'S' => $message,
-                ],
-                'pushed_at' => [
-                    'N' => $now,
-                ],
-                'ttr' => [
-                    'N' => $ttr ?? 0,
-                ],
-                'delay' => [
-                    'N' => $delay,
-                ],
-                'priority' => [
-                    'S' => $priority ?? 'default',
-                ],
-                'reserved_at' => [
-                    'N' => 0,
-                ],
-                'attempt' => [
-                    'N' => 0,
-                ],
-                'done_at' => [
-                    'N' => 0,
-                ],
+            $this->tableIdAttribute => [
+                'S' => $id,
+            ],
+            'channel' => [
+                'S' => $this->prefix,
+            ],
+            'job' => [
+                'S' => $message,
+            ],
+            'pushed_at' => [
+                'N' => $now,
+            ],
+            'ttr' => [
+                'N' => $ttr ?? 0,
+            ],
+            'delay' => [
+                'N' => $delay,
+            ],
+            'priority' => [
+                'S' => $priority ?? 'default',
+            ],
+            'reserved_at' => [
+                'N' => 0,
+            ],
+            'attempt' => [
+                'N' => 0,
+            ],
+            'done_at' => [
+                'N' => 0,
             ],
         ];
     }
