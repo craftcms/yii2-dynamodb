@@ -5,6 +5,7 @@ namespace tests\drivers;
 use pixelandtonic\dynamodb\drivers\Queue;
 use tests\app\SimpleTestJob;
 use tests\TestCase;
+use yii\base\InvalidArgumentException;
 
 class QueueTest extends TestCase
 {
@@ -33,7 +34,21 @@ class QueueTest extends TestCase
         $this->assertStringContainsString('queue-prefix', $id);
     }
 
-    public function testStatus()
+    public function testStatusThrowsErrorWhenNotFound()
+    {
+        // Arrange
+        $queue = new Queue($this->getQueue());
+        $id = 'something-not-found';
+
+        // Assert
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unknown message ID: $id.");
+
+        // Act
+        $queue->status($id);
+    }
+
+    public function testStatusWaiting()
     {
         // Arrange
         $queue = new Queue($this->getQueue());
@@ -44,6 +59,6 @@ class QueueTest extends TestCase
         $status = $queue->status($id);
 
         // Assert
-        $this->assertNotNull($status);
+        $this->assertEquals(1, $status);
     }
 }
