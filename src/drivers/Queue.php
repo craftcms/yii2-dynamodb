@@ -10,19 +10,12 @@ class Queue extends \yii\queue\Queue
     use WithDynamoDbClient;
 
     /**
-     * The prefix that should be used for generating keys/ids.
-     *
-     * @var string
-     */
-    public $prefix;
-
-    /**
      * @inheritDoc
      */
     protected function pushMessage($message, $ttr, $delay, $priority)
     {
         try {
-            $id = uniqid($this->prefix);
+            $id = uniqid($this->keyPrefix);
 
             $item = $this->buildItem($id, $message, $ttr, $delay, $priority);
 
@@ -100,7 +93,7 @@ class Queue extends \yii\queue\Queue
                 'S' => $id,
             ],
             'channel' => [
-                'S' => $this->prefix,
+                'S' => $this->keyPrefix,
             ],
             'job' => [
                 'S' => $message,

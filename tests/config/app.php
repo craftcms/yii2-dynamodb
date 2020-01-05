@@ -32,7 +32,7 @@ return [
             'secret' => 'local',
             'region' => 'local',
             'endpoint' => 'http://localhost:8000',
-            'prefix' => 'queue-prefix:',
+            'keyPrefix' => 'queue-prefix:',
         ],
         'request' => [
             'cookieValidationKey' => 'dipUyxo0rv924WuhjmEk',
