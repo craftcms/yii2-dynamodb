@@ -73,7 +73,6 @@ class Queue extends \yii\queue\Queue
             return self::STATUS_WAITING;
         }
 
-
         // is the job marked as done?
         if ($item['done_at']['N'] !== 0) {
             return self::STATUS_RESERVED;
