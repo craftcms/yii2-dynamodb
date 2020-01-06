@@ -2,19 +2,12 @@
 
 namespace pixelandtonic\dynamodb\drivers;
 
+use pixelandtonic\dynamodb\WithDynamoDbClient;
 use Yii;
 
 class Session extends \yii\web\Session
 {
-    use HasDynamoDbClient;
-
-    /**
-     * @var string a string prefixed to every cache key so that it is unique. If not set,
-     * it will use a prefix generated from [[Application::id]]. You may set this property to be an empty string
-     * if you don't want to use key prefix. It is recommended that you explicitly set this property to some
-     * static value if the cached data needs to be shared among multiple applications.
-     */
-    public $keyPrefix;
+    use WithDynamoDbClient;
 
     /**
      * @inheritDoc

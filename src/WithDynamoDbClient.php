@@ -1,32 +1,41 @@
 <?php
 
-namespace pixelandtonic\dynamodb\drivers;
+namespace pixelandtonic\dynamodb;
 
 use Aws\Credentials\CredentialProvider;
 use Aws\DynamoDb\DynamoDbClient;
+use Yii;
 
-trait HasDynamoDbClient
+trait WithDynamoDbClient
 {
     /**
-     * DynamoDB table name to use for the session.
+     * DynamoDB table name to use for the data.
      *
      * @var string
      */
     public $table;
 
     /**
-     * DynamoDB table attribute to use for the session id.
+     * DynamoDB table attribute to use for the id.
      *
      * @var string
      */
     public $tableIdAttribute = 'id';
 
     /**
-     * DynamoDB table attribute to use for the session data.
+     * DynamoDB table attribute to use for data.
      *
      * @var string
      */
     public $tableDataAttribute = 'data';
+
+    /**
+     * @var string a string prefixed to every cache key so that it is unique. If not set,
+     * it will use a prefix generated from [[Application::id]]. You may set this property to be an empty string
+     * if you don't want to use key prefix. It is recommended that you explicitly set this property to some
+     * static value if the cached data needs to be shared among multiple applications.
+     */
+    public $keyPrefix;
 
     /**
      * AWS access key.
@@ -43,7 +52,7 @@ trait HasDynamoDbClient
     public $secret;
 
     /**
-     * Region where queue is hosted.
+     * Region where dynamodb table is hosted.
      *
      * @var string
      */
