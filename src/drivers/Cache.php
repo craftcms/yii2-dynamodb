@@ -2,12 +2,12 @@
 
 namespace pixelandtonic\dynamodb\drivers;
 
-use Aws\DynamoDb\DynamoDbClient;
+use pixelandtonic\dynamodb\WithDynamoDbClient;
 use Yii;
 
 class Cache extends \yii\caching\Cache
 {
-    use HasDynamoDbClient;
+    use WithDynamoDbClient;
 
     /**
      * @inheritDoc
@@ -41,9 +41,9 @@ class Cache extends \yii\caching\Cache
      */
     protected function setValue($key, $value, $duration)
     {
-        $key = $this->buildKey($key);
-
         try {
+            $key = $this->buildKey($key);
+
             $this->client->putItem([
                 'TableName' => $this->table,
                 'Item' => [

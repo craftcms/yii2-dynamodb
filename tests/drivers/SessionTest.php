@@ -2,7 +2,6 @@
 
 namespace tests\drivers;
 
-use Aws\DynamoDb\DynamoDbClient;
 use tests\TestCase;
 
 class SessionTest extends TestCase
