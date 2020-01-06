@@ -11,7 +11,7 @@
   "require": {
     "ext-json": "*",
     "yiisoft/yii2": "~2.0.14",
-    "yiisoft/yii2-queue": "^2.3"
+    "yiisoft/yii2-queue": "^2.1.0"
   },
   "require-dev": {
     "aws/aws-sdk-php": ">=2.4",

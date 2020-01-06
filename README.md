@@ -6,6 +6,8 @@
 
 Easily use DynamoDB as a cache, session, or queue using this library in your Yii2 or Craft CMS projects.
 
+> Note: currently Craft supports Yii2 Queue version 2.1.0 so this package is based on version 2.1.0 of yii2-queue.
+
 ## Installation
 
 You can install the package via composer:
