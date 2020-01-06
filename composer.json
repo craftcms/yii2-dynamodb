@@ -28,7 +28,9 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit --testdox"
+    "docker": "docker-compose up -d dynamodb",
+    "test": "vendor/bin/phpunit --testdox",
+    "tables": "make tables"
   },
   "repositories": [
     {
