@@ -1,10 +1,10 @@
-# Yii2 DynamoDB Cache and Queue Driver Implementation
+# Yii2 DynamoDB Cache, Session, and Queue Driver Implementation
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/pixelandtonic/yii2-dynamodb.svg?style=flat-square)](https://packagist.org/packages/pixelandtonic/yii2-dynamodb)
 [![Total Downloads](https://img.shields.io/packagist/dt/pixelandtonic/yii2-dynamodb.svg?style=flat-square)](https://packagist.org/packages/pixelandtonic/yii2-dynamodb)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/pixelandtonic/yii2-dynamodb/run-tests?label=tests)](https://github.com/pixelandtonic/yii2-dynamodb/actions?query=workflow%3Arun-tests+branch%3Amaster)
 
-Easily use DynamoDB as a queue or cache using this library in your Yii2 or Craft CMS projects.    
+Easily use DynamoDB as a cache, session, or queue using this library in your Yii2 or Craft CMS projects.
 
 ## Installation
 
@@ -16,7 +16,7 @@ composer require pixelandtonic/yii2-dynamodb
 
 ## Usage
 
-This package provides two drivers for DynamoDB; queue and cache.
+This package provides three drivers for DynamoDB; caching, sessions, and queuing.
 
 ### Cache Component
 
@@ -44,7 +44,7 @@ return [
     ],
     'components' => [
         'cache' => [
-            'class' => \pixelandtonic\dynamodb\Cache::class,
+            'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
             'table' => 'cache-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
@@ -68,7 +68,7 @@ return [
     ],
     'components' => [
         'session' => [
-            'class' => \pixelandtonic\dynamodb\Session::class,
+            'class' => \pixelandtonic\dynamodb\drivers\Session::class,
             'table' => 'session-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
@@ -87,9 +87,7 @@ Tests run against a local DynamoDB table using Docker. To run tests, you must ru
 
 ```bash
 docker-compose up -d
-```
-
-``` bash
+make tables
 composer test
 ```
 
