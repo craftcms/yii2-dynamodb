@@ -2,6 +2,7 @@
 
 namespace pixelandtonic\dynamodb\drivers;
 
+use pixelandtonic\dynamodb\WithDynamoDbClient;
 use Yii;
 
 class Cache extends \yii\caching\Cache

@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelandtonic\dynamodb\drivers;
+namespace pixelandtonic\dynamodb;
 
 use Aws\Credentials\CredentialProvider;
 use Aws\DynamoDb\DynamoDbClient;

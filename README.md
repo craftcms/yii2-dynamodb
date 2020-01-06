@@ -44,7 +44,7 @@ return [
     ],
     'components' => [
         'cache' => [
-            'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
+            'class' => \pixelandtonic\dynamodb\Cache::class,
             'table' => 'cache-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
@@ -68,7 +68,7 @@ return [
     ],
     'components' => [
         'session' => [
-            'class' => \pixelandtonic\dynamodb\drivers\Session::class,
+            'class' => \pixelandtonic\dynamodb\Session::class,
             'table' => 'session-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
