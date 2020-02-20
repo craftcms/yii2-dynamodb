@@ -46,7 +46,7 @@ return [
     ],
     'components' => [
         'cache' => [
-            'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
+            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbCache::class,
             'table' => 'cache-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data

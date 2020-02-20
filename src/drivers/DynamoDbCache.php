@@ -5,7 +5,7 @@ namespace pixelandtonic\dynamodb\drivers;
 use pixelandtonic\dynamodb\WithDynamoDbClient;
 use Yii;
 
-class Cache extends \yii\caching\Cache
+class DynamoDbCache extends \yii\caching\Cache
 {
     use WithDynamoDbClient;
 
@@ -29,7 +29,7 @@ class Cache extends \yii\caching\Cache
             return null;
         }
 
-        if (is_null($result['Item'])) {
+        if ($result['Item'] === null) {
             return false;
         }
 

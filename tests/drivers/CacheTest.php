@@ -2,7 +2,7 @@
 
 namespace tests\cache\driver;
 
-use pixelandtonic\dynamodb\drivers\Cache;
+use pixelandtonic\dynamodb\drivers\DynamoDbCache;
 use tests\TestCase;
 
 class CacheTest extends TestCase
@@ -12,7 +12,7 @@ class CacheTest extends TestCase
         // Arrange
         $key1 = uniqid('testing-flush-');
         $key2 = uniqid('testing-flush-2');
-        $cache = new Cache($this->getCache());
+        $cache = new DynamoDbCache($this->getCache());
         $cache->set($key1, ['some' => 'value']);
         $cache->set($key2, ['another' => 'value']);
 
@@ -29,7 +29,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-delete-');
-        $cache = new Cache($this->getCache());
+        $cache = new DynamoDbCache($this->getCache());
         $cache->set($key, ['some' => 'value']);
 
         // Act
@@ -44,7 +44,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-exists-');
-        $cache = new Cache($this->getCache());
+        $cache = new DynamoDbCache($this->getCache());
 
         // Act
         $cache->set($key, ['some' => 'value']);
@@ -60,7 +60,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-set-');
-        $cache = new Cache($this->getCache());
+        $cache = new DynamoDbCache($this->getCache());
 
         // Act
         $saved = $cache->set($key, ['some' => 'value']);
@@ -72,7 +72,7 @@ class CacheTest extends TestCase
     public function testGetValue()
     {
         $key = uniqid('testing-get-');
-        $cache = new Cache($this->getCache());
+        $cache = new DynamoDbCache($this->getCache());
         $encoded = ['some' => 'value'];
         $cache->set($key, ['some' => 'value']);
 

@@ -10,7 +10,7 @@ return [
     ],
     'components' => [
         'cache' => [
-            'class' => \pixelandtonic\dynamodb\drivers\Cache::class,
+            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbCache::class,
             'table' => 'cache-test',
             'key' => 'local',
             'secret' => 'local',
