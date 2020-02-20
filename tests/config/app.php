@@ -4,7 +4,7 @@ return [
     'id' => 'yii2-dynamodb-test-app',
     'basePath' => __DIR__,
     'vendorPath' => dirname(__DIR__) . '/vendor',
-    'runtimePath' => dirname(dirname(__DIR__)) . '/runtime',
+    'runtimePath' => dirname(__DIR__, 2) . '/runtime',
     'bootstrap' => [
         'cache',
     ],
