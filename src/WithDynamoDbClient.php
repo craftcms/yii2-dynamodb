@@ -118,7 +118,8 @@ trait WithDynamoDbClient
                 'version' => $this->version,
             ];
 
-            if (!is_null($this->endpoint)) {
+            // useful for using DAX
+            if ($this->endpoint !== null) {
                 $config['endpoint'] = $this->endpoint;
             }
 
