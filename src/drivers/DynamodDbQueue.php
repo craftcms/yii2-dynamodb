@@ -6,7 +6,7 @@ use pixelandtonic\dynamodb\WithDynamoDbClient;
 use Yii;
 use yii\base\InvalidArgumentException;
 
-class Queue extends \yii\queue\Queue
+class DynamodDbQueue extends \yii\queue\Queue
 {
     use WithDynamoDbClient;
 

@@ -2,7 +2,7 @@
 
 namespace tests\drivers;
 
-use pixelandtonic\dynamodb\drivers\Queue;
+use pixelandtonic\dynamodb\drivers\DynamodDbQueue;
 use tests\app\SimpleTestJob;
 use tests\TestCase;
 use yii\base\InvalidArgumentException;
@@ -23,7 +23,7 @@ class QueueTest extends TestCase
     public function testPushMessage()
     {
         // Arrange
-        $queue = new Queue($this->getQueue());
+        $queue = new DynamodDbQueue($this->getQueue());
         $job = new SimpleTestJob();
 
         // Act
@@ -37,7 +37,7 @@ class QueueTest extends TestCase
     public function testStatusThrowsErrorWhenNotFound()
     {
         // Arrange
-        $queue = new Queue($this->getQueue());
+        $queue = new DynamodDbQueue($this->getQueue());
         $id = 'something-not-found';
 
         // Assert
@@ -51,7 +51,7 @@ class QueueTest extends TestCase
     public function testStatusWaiting()
     {
         // Arrange
-        $queue = new Queue($this->getQueue());
+        $queue = new DynamodDbQueue($this->getQueue());
         $job = new SimpleTestJob();
         $id = $queue->push($job);
 

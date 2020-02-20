@@ -26,7 +26,7 @@ return [
             'endpoint' => 'http://localhost:8000',
         ],
         'queue' => [
-            'class' => \pixelandtonic\dynamodb\drivers\Queue::class,
+            'class' => \pixelandtonic\dynamodb\drivers\DynamodDbQueue::class,
             'table' => 'queue-test',
             'key' => 'local',
             'secret' => 'local',
