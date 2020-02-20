@@ -70,7 +70,7 @@ return [
     ],
     'components' => [
         'session' => [
-            'class' => \pixelandtonic\dynamodb\drivers\Session::class,
+            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbSession::class,
             'table' => 'session-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data

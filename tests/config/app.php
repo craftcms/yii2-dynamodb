@@ -18,7 +18,7 @@ return [
             'endpoint' => 'http://localhost:8000',
         ],
         'session' => [
-            'class' => \pixelandtonic\dynamodb\drivers\Session::class,
+            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbSession::class,
             'table' => 'session-test',
             'key' => 'local',
             'secret' => 'local',

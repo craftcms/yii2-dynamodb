@@ -5,7 +5,7 @@ namespace pixelandtonic\dynamodb\drivers;
 use pixelandtonic\dynamodb\WithDynamoDbClient;
 use Yii;
 
-class Session extends \yii\web\Session
+class DynamoDbSession extends \yii\web\Session
 {
     use WithDynamoDbClient;
 
