@@ -22,7 +22,7 @@ This package provides three drivers for DynamoDB; caching, sessions, and queuing
 
 ### Cache Component
 
-#### Create DynamoDB Table
+#### Create DynamoDB Cache Table
 
 Since DynamoDB is a NoSQL database, the only key you have to specify is the primary key. You can use the following AWS CLI command to generate a table for the cache.
 
@@ -63,7 +63,7 @@ return [
 
 ### Session Component
 
-#### Create DynamoDB Table
+#### Create DynamoDB Session Table
 
 Since DynamoDB is a NoSQL database, the only key you have to specify is the primary key. You can use the following AWS CLI command to generate a table for the session.
 
@@ -104,7 +104,7 @@ return [
 
 ### Queue Component
 
-#### Create DynamoDB Table
+#### Create DynamoDB Queue Table
 
 Since DynamoDB is a NoSQL database, the only key you have to specify is the primary key. You can use the following AWS CLI command to generate a table for the queue.
 
@@ -147,11 +147,15 @@ return [
 
 Tests run against local DynamoDB tables using Docker. To run tests, you must run the following:
 
-```bash
-docker-compose up -d
-make tables
-composer test
-```
+1. Ensure Docker is running
+2. Start the DynamoDB container in the `docker-compose.yaml` with `docker-compose up -d`
+3. Create the DynamoDB tables for the [cache](#create-dynamodb-cache-table), [session](#create-dynamodb-session-table), and [queue](#create-dynamodb-queue-table)
+4. Run the test suite with `vendor/bin/phpunit --testdox`
+
+To make the setup and testing easier, you can run the following Composer scripts: 
+
+1. `composer run setup`
+2. `composer run test`
 
 ### Security
 
