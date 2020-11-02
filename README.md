@@ -61,7 +61,7 @@ return [
 ];
 ```
 
-#### Configure Session Component
+### Session Component
 
 In your `app.php`, configure the `session` component to use the driver.
 
@@ -87,7 +87,7 @@ return [
 ];
 ```
 
-#### Configure Queue Component
+### Queue Component
 
 In your `app.php`, configure the `queue` component to use the driver.
 
@@ -125,7 +125,7 @@ composer test
 
 ### Security
 
-If you discover any security related issues, please email jason@craftcms.com instead of using the issue tracker.
+If you discover any security issues, please email jason@craftcms.com instead of using GitHub issues.
 
 ## Credits
 
