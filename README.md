@@ -92,7 +92,7 @@ return [
 In your `app.php`, configure the `queue` component to use the driver.
 
 ```php
-use \pixelandtonic\dynamodb\drivers\DynamodDbQueue;
+use \pixelandtonic\dynamodb\drivers\DynamoDbQueue;
 
 return [
     'bootstrap' => [
@@ -100,7 +100,7 @@ return [
     ],
     'components' => [
         'queue' => [
-            'class' => DynamodDbQueue::class,
+            'class' => DynamoDbQueue::class,
             'table' => 'queue-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data

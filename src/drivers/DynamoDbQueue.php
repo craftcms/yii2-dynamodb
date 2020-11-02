@@ -7,7 +7,7 @@ use Yii;
 use yii\base\InvalidArgumentException;
 use yii\queue\Queue;
 
-class DynamodDbQueue extends Queue
+class DynamoDbQueue extends Queue
 {
     use WithDynamoDbClient;
 
@@ -17,7 +17,7 @@ class DynamodDbQueue extends Queue
     protected function pushMessage($message, $ttr, $delay, $priority)
     {
         try {
-            $id = uniqid($this->keyPrefix);
+            $id = uniqid($this->keyPrefix, true);
 
             $item = $this->buildItem($id, $message, $ttr, $delay, $priority);
 
