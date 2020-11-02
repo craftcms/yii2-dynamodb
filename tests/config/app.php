@@ -1,5 +1,9 @@
 <?php
 
+use pixelandtonic\dynamodb\drivers\DynamoDbCache;
+use pixelandtonic\dynamodb\drivers\DynamoDbQueue;
+use pixelandtonic\dynamodb\drivers\DynamoDbSession;
+
 return [
     'id' => 'yii2-dynamodb-test-app',
     'basePath' => __DIR__,
@@ -10,7 +14,7 @@ return [
     ],
     'components' => [
         'cache' => [
-            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbCache::class,
+            'class' => DynamoDbCache::class,
             'table' => 'cache-test',
             'key' => 'local',
             'secret' => 'local',
@@ -18,7 +22,7 @@ return [
             'endpoint' => 'http://localhost:8000',
         ],
         'session' => [
-            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbSession::class,
+            'class' => DynamoDbSession::class,
             'table' => 'session-test',
             'key' => 'local',
             'secret' => 'local',
@@ -26,7 +30,7 @@ return [
             'endpoint' => 'http://localhost:8000',
         ],
         'queue' => [
-            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbQueue::class,
+            'class' => DynamoDbQueue::class,
             'table' => 'queue-test',
             'key' => 'local',
             'secret' => 'local',

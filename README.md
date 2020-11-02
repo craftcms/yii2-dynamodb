@@ -22,12 +22,12 @@ This package provides three drivers for DynamoDB; caching, sessions, and queuing
 
 ### Cache Component
 
-#### Create DynamoDB Tables
+#### Create DynamoDB Table
 
-Since DynamoDB is a NoSQL database, the only key you have to specify is the primary key. You can use the following AWS CLI command to generate a table.
+Since DynamoDB is a NoSQL database, the only key you have to specify is the primary key. You can use the following AWS CLI command to generate a table for the cache.
 
 ```shell script
-aws dynamodb create-table --table-name=session-table \
+aws dynamodb create-table --table-name=my-app-cache-table \
 	--attribute-definitions=AttributeName=id,AttributeType=S \
 	--key-schema=AttributeName=id,KeyType=HASH \
 	--billing-mode=PAY_PER_REQUEST
@@ -49,7 +49,7 @@ return [
     'components' => [
         'cache' => [
             'class' => DynamoDbCache::class,
-            'table' => 'cache-test',
+            'table' => 'my-app-cache-table',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
             'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
@@ -63,6 +63,21 @@ return [
 
 ### Session Component
 
+#### Create DynamoDB Table
+
+Since DynamoDB is a NoSQL database, the only key you have to specify is the primary key. You can use the following AWS CLI command to generate a table for the session.
+
+```shell script
+aws dynamodb create-table --table-name=my-app-session-table \
+	--attribute-definitions=AttributeName=id,AttributeType=S \
+	--key-schema=AttributeName=id,KeyType=HASH \
+	--billing-mode=PAY_PER_REQUEST
+```
+
+> Note: Since the ID can contain more than numbers, it needs to be specified as a string in DynamoDB.
+
+#### Configure Session Component
+
 In your `app.php`, configure the `session` component to use the driver.
 
 ```php
@@ -75,7 +90,7 @@ return [
     'components' => [
         'session' => [
             'class' => DynamoDbSession::class,
-            'table' => 'session-test',
+            'table' => 'my-app-session-table',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
             'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
@@ -89,6 +104,21 @@ return [
 
 ### Queue Component
 
+#### Create DynamoDB Table
+
+Since DynamoDB is a NoSQL database, the only key you have to specify is the primary key. You can use the following AWS CLI command to generate a table for the queue.
+
+```shell script
+aws dynamodb create-table --table-name=my-app-queue-table \
+	--attribute-definitions=AttributeName=id,AttributeType=S \
+	--key-schema=AttributeName=id,KeyType=HASH \
+	--billing-mode=PAY_PER_REQUEST
+```
+
+> Note: Since the ID can contain more than numbers, it needs to be specified as a string in DynamoDB.
+
+#### Configure Queue Component
+
 In your `app.php`, configure the `queue` component to use the driver.
 
 ```php
@@ -101,7 +131,7 @@ return [
     'components' => [
         'queue' => [
             'class' => DynamoDbQueue::class,
-            'table' => 'queue-test',
+            'table' => 'my-app-queue-table',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
             'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
