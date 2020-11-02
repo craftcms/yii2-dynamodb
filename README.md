@@ -40,13 +40,15 @@ aws dynamodb create-table --table-name=session-table \
 In your `app.php`, configure the `cache` component to use the driver.
 
 ```php
+use \pixelandtonic\dynamodb\drivers\DynamoDbCache;
+
 return [
     'bootstrap' => [
         'cache',
     ],
     'components' => [
         'cache' => [
-            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbCache::class,
+            'class' => DynamoDbCache::class,
             'table' => 'cache-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
@@ -64,14 +66,42 @@ return [
 In your `app.php`, configure the `session` component to use the driver.
 
 ```php
+use \pixelandtonic\dynamodb\drivers\DynamoDbSession;
+
 return [
     'bootstrap' => [
         'session',
     ],
     'components' => [
         'session' => [
-            'class' => \pixelandtonic\dynamodb\drivers\DynamoDbSession::class,
+            'class' => DynamoDbSession::class,
             'table' => 'session-test',
+            'tableIdAttribute' => 'id', // optional: defaults to id
+            'tableDataAttribute' => 'data', // optional: defaults to data
+            'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
+            'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
+            'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
+            'region' => '<region>', // optional: defaults to AWS_REGION env var
+        ],
+    ],
+];
+```
+
+#### Configure Queue Component
+
+In your `app.php`, configure the `queue` component to use the driver.
+
+```php
+use \pixelandtonic\dynamodb\drivers\DynamodDbQueue;
+
+return [
+    'bootstrap' => [
+        'queue',
+    ],
+    'components' => [
+        'queue' => [
+            'class' => DynamodDbQueue::class,
+            'table' => 'queue-test',
             'tableIdAttribute' => 'id', // optional: defaults to id
             'tableDataAttribute' => 'data', // optional: defaults to data
             'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
