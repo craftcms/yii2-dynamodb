@@ -18,7 +18,7 @@ class SessionTest extends TestCase
     public function testReadSession()
     {
         // Arrange
-        $id = uniqid('testing-destroy-session-');
+        $id = uniqid('testing-destroy-session-', true);
         $session = $this->getSession();
 
         // Act
@@ -32,7 +32,7 @@ class SessionTest extends TestCase
     public function testDestroySession()
     {
         // Arrange
-        $id = uniqid('testing-destroy-session-');
+        $id = uniqid('testing-destroy-session-', true);
         $session = $this->getSession();
 
         // Act
@@ -47,7 +47,7 @@ class SessionTest extends TestCase
     public function testWriteSession()
     {
         // Arrange
-        $id = uniqid('testing-write-session-');
+        $id = uniqid('testing-write-session-', true);
         $session = $this->getSession();
 
         // Act
