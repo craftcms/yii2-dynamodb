@@ -1,5 +1,7 @@
 <?php
 
+use yii\web\Application;
+
 error_reporting(-1);
 
 define('YII_ENABLE_ERROR_HANDLER', false);
@@ -14,7 +16,7 @@ require_once(dirname(__DIR__) . '/vendor/autoload.php');
 $config = require(__DIR__ . '/config/app.php');
 
 try {
-    $app = new \yii\web\Application($config);
+    $app = new Application($config);
 } catch (Exception $e) {
     die($e->getMessage());
 }

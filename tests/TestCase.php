@@ -2,14 +2,17 @@
 
 namespace tests;
 
+use yii\caching\CacheInterface;
+use yii\web\Session;
+
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function getCache()
+    protected function getCache(): CacheInterface
     {
         return \Yii::$app->getCache();
     }
 
-    protected function getSession()
+    protected function getSession(): Session
     {
         return \Yii::$app->getSession();
     }
