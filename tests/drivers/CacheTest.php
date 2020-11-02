@@ -10,8 +10,8 @@ class CacheTest extends TestCase
     public function testFlush()
     {
         // Arrange
-        $key1 = uniqid('testing-flush-');
-        $key2 = uniqid('testing-flush-2');
+        $key1 = uniqid('testing-flush-', true);
+        $key2 = uniqid('testing-flush-2', true);
         $cache = new DynamoDbCache($this->getCache());
         $cache->set($key1, ['some' => 'value']);
         $cache->set($key2, ['another' => 'value']);
@@ -28,7 +28,7 @@ class CacheTest extends TestCase
     public function testDeleteValue()
     {
         // Arrange
-        $key = uniqid('testing-delete-');
+        $key = uniqid('testing-delete-', true);
         $cache = new DynamoDbCache($this->getCache());
         $cache->set($key, ['some' => 'value']);
 
@@ -43,7 +43,7 @@ class CacheTest extends TestCase
     public function testExists()
     {
         // Arrange
-        $key = uniqid('testing-exists-');
+        $key = uniqid('testing-exists-', true);
         $cache = new DynamoDbCache($this->getCache());
 
         // Act
@@ -59,7 +59,7 @@ class CacheTest extends TestCase
     public function testSetValue()
     {
         // Arrange
-        $key = uniqid('testing-set-');
+        $key = uniqid('testing-set-', true);
         $cache = new DynamoDbCache($this->getCache());
 
         // Act
@@ -71,7 +71,7 @@ class CacheTest extends TestCase
 
     public function testGetValue()
     {
-        $key = uniqid('testing-get-');
+        $key = uniqid('testing-get-', true);
         $cache = new DynamoDbCache($this->getCache());
         $encoded = ['some' => 'value'];
         $cache->set($key, ['some' => 'value']);

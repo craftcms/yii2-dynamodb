@@ -1,6 +1,6 @@
 {
   "name": "pixelandtonic/yii2-dynamodb",
-  "description": "Yii2 implementation of a queue and cache driver for DynamoDB",
+  "description": "Yii2 implementation of a cache, session, and queue driver for DynamoDB",
   "license": "MIT",
   "authors": [
     {
