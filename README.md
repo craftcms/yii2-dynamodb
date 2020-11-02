@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/pixelandtonic/yii2-dynamodb.svg?style=flat-square)](https://packagist.org/packages/pixelandtonic/yii2-dynamodb)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/pixelandtonic/yii2-dynamodb/run-tests?label=tests)](https://github.com/pixelandtonic/yii2-dynamodb/actions?query=workflow%3Arun-tests+branch%3Amaster)
 
-Easily use DynamoDB as a cache, session, or queue using this library in your Yii2 or Craft CMS projects.
+Easily use DynamoDB as a [cache](https://www.yiiframework.com/doc/guide/2.0/en/caching-overview), [session](https://www.yiiframework.com/doc/guide/2.0/en/runtime-sessions-cookies), or [queue](https://github.com/yiisoft/yii2-queue) using this library in your Yii2 or Craft CMS projects.
 
 > Note: currently Craft supports Yii2 Queue version 2.1.0 so this package is based on version 2.1.0 of yii2-queue.
 
@@ -145,7 +145,7 @@ return [
 
 ### Testing
 
-Tests run against a local DynamoDB table using Docker. To run tests, you must run the following:
+Tests run against local DynamoDB tables using Docker. To run tests, you must run the following:
 
 ```bash
 docker-compose up -d
