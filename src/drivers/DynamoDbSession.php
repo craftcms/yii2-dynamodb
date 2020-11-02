@@ -32,12 +32,14 @@ class DynamoDbSession extends Session
         try {
             $key = $this->calculateKey($id);
 
-            $result = $this->client->getItem([
-                'TableName' => $this->table,
-                'Key' => [
-                    $this->tableIdAttribute => ['S' => $key]
+            $result = $this->client->getItem(
+                [
+                    'TableName' => $this->table,
+                    'Key' => [
+                        $this->tableIdAttribute => ['S' => $key]
+                    ]
                 ]
-            ]);
+            );
         } catch (\Exception $e) {
             Yii::warning("Unable to get session data: {$e->getMessage()}", __METHOD__);
 
@@ -59,13 +61,15 @@ class DynamoDbSession extends Session
         try {
             $key = $this->calculateKey($id);
 
-            $this->client->putItem([
-                'TableName' => $this->table,
-                'Item' => [
-                    $this->tableIdAttribute => ['S' => $key],
-                    $this->tableDataAttribute => ['S' => $data],
+            $this->client->putItem(
+                [
+                    'TableName' => $this->table,
+                    'Item' => [
+                        $this->tableIdAttribute => ['S' => $key],
+                        $this->tableDataAttribute => ['S' => $data],
+                    ]
                 ]
-            ]);
+            );
         } catch (\Exception $e) {
             Yii::warning("Unable to write session: {$e->getMessage()}", __METHOD__);
 
@@ -83,12 +87,14 @@ class DynamoDbSession extends Session
         try {
             $key = $this->calculateKey($id);
 
-            $this->client->deleteItem([
-                'TableName' => $this->table,
-                'Key' => [
-                    $this->tableIdAttribute => ['S' => $key],
+            $this->client->deleteItem(
+                [
+                    'TableName' => $this->table,
+                    'Key' => [
+                        $this->tableIdAttribute => ['S' => $key],
+                    ]
                 ]
-            ]);
+            );
         } catch (\Exception $e) {
             Yii::warning("Unable to destroy session: {$e->getMessage()}", __METHOD__);
 
