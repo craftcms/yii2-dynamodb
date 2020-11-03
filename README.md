@@ -28,9 +28,9 @@ Since DynamoDB is a NoSQL database, the only key you have to specify is the prim
 
 ```shell script
 aws dynamodb create-table --table-name=my-app-cache-table \
-	--attribute-definitions=AttributeName=id,AttributeType=S \
-	--key-schema=AttributeName=id,KeyType=HASH \
-	--billing-mode=PAY_PER_REQUEST
+    --attribute-definitions=AttributeName=id,AttributeType=S \
+    --key-schema=AttributeName=id,KeyType=HASH \
+    --billing-mode=PAY_PER_REQUEST
 ```
 
 > Note: Since the ID can contain more than numbers, it needs to be specified as a string in DynamoDB.
@@ -69,9 +69,9 @@ Since DynamoDB is a NoSQL database, the only key you have to specify is the prim
 
 ```shell script
 aws dynamodb create-table --table-name=my-app-session-table \
-	--attribute-definitions=AttributeName=id,AttributeType=S \
-	--key-schema=AttributeName=id,KeyType=HASH \
-	--billing-mode=PAY_PER_REQUEST
+    --attribute-definitions=AttributeName=id,AttributeType=S \
+    --key-schema=AttributeName=id,KeyType=HASH \
+    --billing-mode=PAY_PER_REQUEST
 ```
 
 > Note: Since the ID can contain more than numbers, it needs to be specified as a string in DynamoDB.
@@ -110,9 +110,9 @@ Since DynamoDB is a NoSQL database, the only key you have to specify is the prim
 
 ```shell script
 aws dynamodb create-table --table-name=my-app-queue-table \
-	--attribute-definitions=AttributeName=id,AttributeType=S \
-	--key-schema=AttributeName=id,KeyType=HASH \
-	--billing-mode=PAY_PER_REQUEST
+    --attribute-definitions=AttributeName=id,AttributeType=S \
+    --key-schema=AttributeName=id,KeyType=HASH \
+    --billing-mode=PAY_PER_REQUEST
 ```
 
 > Note: Since the ID can contain more than numbers, it needs to be specified as a string in DynamoDB.
