@@ -22,12 +22,12 @@
     "docs": "https://github.com/pixelandtonic/yii2-dynamodb/blob/README.md"
   },
   "require": {
+    "aws/aws-sdk-php": ">=2.4",
     "ext-json": "*",
     "yiisoft/yii2": "~2.0.14",
     "yiisoft/yii2-queue": "^2.3.0"
   },
   "require-dev": {
-    "aws/aws-sdk-php": ">=2.4",
     "phpunit/phpunit": "^8.5"
   },
   "autoload": {
@@ -48,5 +48,11 @@
     "docker": "docker-compose up -d dynamodb",
     "test": "vendor/bin/phpunit --testdox",
     "tables": "make tables"
-  }
+  },
+    "repositories": [
+      {
+        "type": "composer",
+        "url": "https://asset-packagist.org"
+      }
+    ]
 }
