@@ -1,13 +1,27 @@
 {
-  "name": "pixelandtonic/yii2-dynamodb",
+  "name": "craftcms/yii2-dynamodb-drivers",
   "description": "Yii2 implementation of a cache, session, and queue driver for DynamoDB",
-  "license": "MIT",
+  "keywords": [
+    "yii2",
+    "dynamodb",
+    "cache",
+    "queue",
+    "session"
+  ],
   "authors": [
     {
-      "name": "Jason McCallister",
-      "email": "jason@pixelandtonic.com"
+      "name": "Pixel & Tonic",
+      "homepage": "https://pixelandtonic.com/"
     }
   ],
+  "license": "MIT",
+  "support": {
+    "email": "support@craftcms.com",
+    "issues": "https://github.com/craftcms/yii2-dynamodb-drivers/issues?state=open",
+    "source": "https://github.com/craftcms/yii2-dynamodb-drivers",
+    "docs": "https://github.com/craftcms/yii2-dynamodb-drivers/blob/v2/README.md",
+    "rss": "https://github.com/craftcms/yii2-dynamodb-drivers/commits/v2.atom"
+  },
   "require": {
     "ext-json": "*",
     "yiisoft/yii2": "~2.0.14",
