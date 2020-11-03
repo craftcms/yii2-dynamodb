@@ -1,5 +1,5 @@
 {
-  "name": "pixelandtonic/yii2-dynamodb-drivers",
+  "name": "pixelandtonic/yii2-dynamodb",
   "description": "Yii2 implementation of a cache, session, and queue driver for DynamoDB",
   "keywords": [
     "yii2",
@@ -17,9 +17,9 @@
   "license": "MIT",
   "support": {
     "email": "support@pixelandtonic.com",
-    "issues": "https://github.com/pixelandtonic/yii2-dynamodb-drivers/issues?state=open",
-    "source": "https://github.com/pixelandtonic/yii2-dynamodb-drivers",
-    "docs": "https://github.com/pixelandtonic/yii2-dynamodb-drivers/blob/README.md"
+    "issues": "https://github.com/pixelandtonic/yii2-dynamodb/issues?state=open",
+    "source": "https://github.com/pixelandtonic/yii2-dynamodb",
+    "docs": "https://github.com/pixelandtonic/yii2-dynamodb/blob/README.md"
   },
   "require": {
     "ext-json": "*",

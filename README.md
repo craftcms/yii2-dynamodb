@@ -13,7 +13,7 @@ Easily use DynamoDB as a [cache](https://www.yiiframework.com/doc/guide/2.0/en/c
 You can install the package via composer:
 
 ```bash
-composer require pixelandtonic/yii2-dynamodb-drivers
+composer require pixelandtonic/yii2-dynamodb
 ```
 
 ## Usage
