@@ -48,11 +48,5 @@
     "docker": "docker-compose up -d dynamodb",
     "test": "vendor/bin/phpunit --testdox",
     "tables": "make tables"
-  },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://asset-packagist.org"
-    }
-  ]
+  }
 }
