@@ -13,7 +13,7 @@ Easily use DynamoDB as a [cache](https://www.yiiframework.com/doc/guide/2.0/en/c
 You can install the package via composer:
 
 ```bash
-composer require pixelandtonic/yii2-dynamodb
+composer require pixelandtonic/yii2-dynamodb-drivers
 ```
 
 ## Usage
@@ -156,10 +156,6 @@ To make the setup and testing easier, you can run the following Composer scripts
 
 1. `composer run setup`
 2. `composer run test`
-
-### Security
-
-If you discover any security issues, please email jason@craftcms.com instead of using GitHub issues.
 
 ## Credits
 
