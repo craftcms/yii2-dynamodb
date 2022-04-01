@@ -2,6 +2,7 @@
 
 namespace pixelandtonic\dynamodb\drivers;
 
+use yii\base\InvalidConfigException;
 use yii\di\Instance;
 use yii\web\Session;
 
@@ -9,7 +10,7 @@ class DynamoDbSession extends Session
 {
     /**
      * @var DynamoDBConnection|string|array the DynamoDB [[Connection]] object or the application component ID of the DynamoDB [[Connection]].
-     * This can also be an array that is used to create a DynamoDB [[Connection]] instance in case you do not want do configure
+     * This can also be an array that is used to create a DynamoDB [[Connection]] instance in case you do not want to configure
      * a DynamoDB connection as an application component.
      * After the Cache object is created, if you want to change this property, you should only assign it
      * with a DynamoDB [[Connection]] object.
@@ -19,10 +20,12 @@ class DynamoDbSession extends Session
 
     /**
      * @inheritDoc
+     * @throws InvalidConfigException
      */
     public function init(): void
     {
         $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
+
         parent::init();
     }
 
@@ -49,12 +52,9 @@ class DynamoDbSession extends Session
      */
     public function writeSession($id, $data): bool
     {
-        $data = [
+        return $this->dynamoDb->updateItem($id, [
             $this->dataAttribute => $data,
-            $this->dynamoDb->ttlAttribute => $this->dynamoDb->ttl,
-        ];
-
-        return $this->dynamoDb->updateItem($id, $data);
+        ]);
     }
 
     /**
@@ -70,6 +70,8 @@ class DynamoDbSession extends Session
      */
     public function gcSession($maxLifetime): bool
     {
-        return $this->dynamoDb->deleteExpired();
+        $this->dynamoDb->deleteExpired();
+
+        return true;
     }
 }

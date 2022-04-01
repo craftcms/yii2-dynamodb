@@ -5,15 +5,11 @@ namespace pixelandtonic\dynamodb\drivers;
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\WriteRequestBatch;
-use JetBrains\PhpStorm\Pure;
-use Yii;
+use Closure;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;
-use yii\base\InvalidCallException;
-use yii\base\InvalidConfigException;
 
 /**
  *
@@ -25,9 +21,6 @@ class DynamoDbConnection extends Component
     public string $tableName;
     public string $partitionKeyAttribute = 'id';
     public ?string $sortKeyAttribute = null;
-    public ?string $partitionKeyPrefix = null;
-    // public $defaultPartitionKey = null;
-    public int|float|string|bool|null $defaultSortKey = null;
     public bool $consistentRead = true;
     public array $batchConfig = [];
     public ?DynamoDbClient $client = null;
@@ -35,6 +28,7 @@ class DynamoDbConnection extends Component
     public ?int $ttl = null;
     public string $ttlAttribute = 'ttl';
     public Marshaler $marshaler;
+    public Closure|null $formatKey = null;
 
     /**
      * @var string|null $endpoint Useful for using DAX, local dev
@@ -122,37 +116,40 @@ class DynamoDbConnection extends Component
         $batch->flush();
     }
 
-    protected function formatKey($key): array
+    protected function formatKey(string|array $key): array
     {
-        $sortKey = $this->defaultSortKey;
+        if (is_callable($this->formatKey)) {
+            $key = call_user_func($this->formatKey, $key);
+        }
 
         if (is_array($key)) {
-            if (count($key) !== 2) {
-                throw new InvalidArgumentException('Compound keys must be an array with exactly 2 elements.');
-            }
-
-            [$partitionKey, $sortKey] = $key;
+            $partitionKey = $key[$this->partitionKeyAttribute] ?? null;
+            $sortKey = $key[$this->sortKeyAttribute] ?? null;
         } else {
             $partitionKey = $key;
+            $sortKey = null;
+        }
+
+        if (!$partitionKey) {
+            throw new InvalidArgumentException('A partition key is required.');
         }
 
         if ($sortKey && !$this->sortKeyAttribute) {
             throw new InvalidArgumentException('A sort key attribute must be defined to use compound keys.');
         }
 
-        $partitionKey = "{$this->partitionKeyPrefix}$partitionKey";
-        $key = [
+        $value = [
             $this->partitionKeyAttribute => $partitionKey,
         ];
 
         if ($this->sortKeyAttribute) {
-            if (!$sortKey) {
+            if ($sortKey === null) {
                 throw new InvalidArgumentException('A sort key attribute was specified, but no value was found.');
             }
-            $key[$this->sortKeyAttribute] = $sortKey;
+            $value[$this->sortKeyAttribute] = $sortKey;
         }
 
-        return $this->marshaler->marshalItem($key);
+        return $this->marshaler->marshalItem($value);
     }
 
     protected function getClient(): DynamoDbClient
@@ -202,7 +199,7 @@ class DynamoDbConnection extends Component
         return $this->_region ?? (getenv('AWS_REGION') ?: null) ?? (getenv('AWS_DEFAULT_REGION') ?: null);
     }
 
-    #[Pure] protected function getMarshaler(): Marshaler
+    protected function getMarshaler(): Marshaler
     {
         return $this->marshaler ?? new Marshaler();
     }
