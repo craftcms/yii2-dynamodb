@@ -90,7 +90,7 @@ class DynamoDbConnection extends Component
     {
         $scan = $this->client->getPaginator('Scan', [
             'TableName' => $this->tableName,
-            'AttributesToGet' => [$this->partitionKeyAttribute],
+            'AttributesToGet' => array_filter([$this->partitionKeyAttribute, $this->sortKeyAttribute]),
             'ScanFilter' => [
                 $this->ttlAttribute => [
                     'ComparisonOperator' => 'LT',
@@ -107,7 +107,10 @@ class DynamoDbConnection extends Component
         // Perform Scan and BatchWriteItem (delete) operations as needed
         foreach ($scan->search('Items') as $item) {
             $batch->delete(
-                [$this->partitionKeyAttribute => $item[$this->partitionKeyAttribute]],
+                array_filter([
+                    $this->partitionKeyAttribute => $item[$this->partitionKeyAttribute],
+                    $this->sortKeyAttribute => $this->sortKeyAttribute ? $item[$this->sortKeyAttribute] : null,
+                ]),
                 $this->tableName,
             );
         }
