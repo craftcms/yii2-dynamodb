@@ -36,7 +36,7 @@ class DynamoDbSession extends Session
     /**
      * @inheritDoc
      */
-    public function openSession()
+    public function openSession(string $savePath, string $sessionName): bool
     {
 
     }
@@ -44,7 +44,7 @@ class DynamoDbSession extends Session
     /**
      * @inheritDoc
      */
-    public function closeSession()
+    public function closeSession(): bool
     {
 
     }
@@ -52,7 +52,7 @@ class DynamoDbSession extends Session
     /**
      * @inheritDoc
      */
-    public function readSession()
+    public function readSession(string $id): string
     {
 
     }
@@ -60,7 +60,7 @@ class DynamoDbSession extends Session
     /**
      * @inheritDoc
      */
-    public function writeSession()
+    public function writeSession(string $id, string $data): bool
     {
 
     }
@@ -68,7 +68,7 @@ class DynamoDbSession extends Session
     /**
      * @inheritDoc
      */
-    public function destroySession()
+    public function destroySession(string $id): bool
     {
 
     }
@@ -76,9 +76,8 @@ class DynamoDbSession extends Session
     /**
      * @inheritDoc
      */
-    public function gcSession()
+    public function gcSession(int $maxLifetime): bool
     {
 
     }
-
 }
