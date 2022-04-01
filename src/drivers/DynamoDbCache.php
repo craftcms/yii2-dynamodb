@@ -2,121 +2,91 @@
 
 namespace pixelandtonic\dynamodb\drivers;
 
-use pixelandtonic\dynamodb\WithDynamoDbClient;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\caching\Cache;
+use yii\di\Instance;
 
 class DynamoDbCache extends Cache
 {
-    use WithDynamoDbClient;
+    /**
+     * @var DynamoDBConnection|string|array the DynamoDB [[Connection]] object or the application component ID of the DynamoDB [[Connection]].
+     * This can also be an array that is used to create a DynamoDB [[Connection]] instance in case you do not want do configure
+     * a DynamoDB connection as an application component.
+     * After the Cache object is created, if you want to change this property, you should only assign it
+     * with a DynamoDB [[Connection]] object.
+     */
+    public DynamoDBConnection|string|array $dynamoDb = 'dynamoDb';
+
+    public string $dataAttribute = 'data';
+
+    /**
+     * Initializes the DynamoDb Cache component.
+     * This method will initialize the [[dynamoDb]] property to make sure it refers to a valid DynamoDb connection.
+     * @throws InvalidConfigException if [[dynamoDb]] is invalid.
+     */
+    public function init(): void
+    {
+        parent::init();
+        $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
+    }
+
+    // /**
+    //  * @inheritDoc
+    //  */
+    // public function buildKey($key)
+    // {
+    //     return $this->
+    // }
 
     /**
      * @inheritDoc
      */
     protected function getValue($key)
     {
-        try {
-            $key = $this->buildKey($key);
+        $result = $this->dynamoDb->getItem($key);
 
-            $result = $this->client->getItem([
-                'TableName' => $this->table,
-                'Key' => [
-                    $this->tableIdAttribute => ['S' => $key]
-                ]
-            ]);
-        } catch (\Exception $e) {
-            Yii::warning("Unable to get cache value: {$e->getMessage()}", __METHOD__);
-
-            return null;
-        }
-
-        if ($result['Item'] === null) {
-            return false;
-        }
-
-        return $result['Item'][$this->tableDataAttribute]['S'] ?? null;
+        return $result[$this->dataAttribute] ?? null;
     }
 
     /**
      * @inheritDoc
      */
-    protected function setValue($key, $value, $duration)
+    protected function setValue($key, $value, $duration): bool
     {
-        try {
-            $key = $this->buildKey($key);
+        $data = [
+            $this->dataAttribute => $value,
+        ];
 
-            $this->client->putItem([
-                'TableName' => $this->table,
-                'Item' => [
-                    $this->tableIdAttribute => ['S' => $key],
-                    $this->tableDataAttribute => ['S' => $value],
-                ]
-            ]);
-        } catch (\Exception $e) {
-            Yii::warning("Unable to set cache value: {$e->getMessage()}", __METHOD__);
-
-            return false;
+        if ($duration) {
+            $data[$this->dynamoDb->ttlAttribute] = $duration;
         }
 
-        return true;
+        return $this->dynamoDb->updateItem($key, $data);
     }
 
     /**
      * @inheritDoc
      */
-    protected function addValue($key, $value, $duration)
+    protected function addValue($key, $value, $duration): bool
     {
-        return $this->set($key, $value, $duration);
+        return $this->setValue($key, $value, $duration);
     }
 
     /**
      * @inheritDoc
      */
-    protected function deleteValue($key)
+    protected function deleteValue($key): bool
     {
-        try {
-            $key = $this->buildKey($key);
-
-            $this->client->deleteItem([
-                'TableName' => $this->table,
-                'Key' => [
-                    $this->tableIdAttribute => ['S' => $key],
-                ],
-            ]);
-        } catch (\Exception $e) {
-            Yii::warning("Unable to delete cache value: {$e->getMessage()}", __METHOD__);
-
-            return false;
-        }
-
-        return true;
+        return $this->dynamoDb->deleteItem($key);
     }
 
     /**
      * @inheritDoc
      */
-    protected function flushValues()
+    protected function flushValues(): bool
     {
-        try {
-            $results = $this->client->scan([
-                'TableName' => $this->table,
-            ]);
-
-            if ($results['Items'] === null) {
-                Yii::error("No items to flush", __METHOD__);
-            }
-
-            foreach ($results['Items'] as $item) {
-                $this->delete($this->buildKey(
-                    $item[$this->tableIdAttribute]['S'])
-                );
-            }
-        } catch (\Exception $e) {
-            Yii::error("Unable to create flush cache: {$e->getMessage()}", __METHOD__);
-
-            return false;
-        }
-
-        return true;
+        Yii::error('Flush operations are not supported.');
+        return false;
     }
 }
