@@ -14,7 +14,7 @@ class DynamoDbQueue extends Queue
     /**
      * @inheritDoc
      */
-    protected function pushMessage($message, $ttr, $delay, $priority)
+    protected function pushMessage(string $message, int $ttr, int $delay, $priority): ?string
     {
         try {
             $id = uniqid($this->keyPrefix, true);
@@ -37,7 +37,7 @@ class DynamoDbQueue extends Queue
     /**
      * @inheritDoc
      */
-    public function status($id)
+    public function status(string $id): int
     {
         try {
             $result = $this->client->getItem([
