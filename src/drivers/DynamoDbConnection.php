@@ -12,6 +12,8 @@ use JetBrains\PhpStorm\Pure;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;
+use yii\base\InvalidCallException;
+use yii\base\InvalidConfigException;
 
 /**
  *
@@ -21,9 +23,11 @@ use yii\base\InvalidArgumentException;
 class DynamoDbConnection extends Component
 {
     public string $tableName;
-    public string $partitionKey = 'id';
+    public string $partitionKeyAttribute = 'id';
+    public ?string $sortKeyAttribute = null;
     public ?string $partitionKeyPrefix = null;
-    public ?string $sortKey = null;
+    // public $defaultPartitionKey = null;
+    public $defaultSortKey = null;
     public bool $consistentRead = true;
     public array $batchConfig = [];
     public ?DynamoDbClient $client = null;
@@ -52,66 +56,47 @@ class DynamoDbConnection extends Component
 
     public function getItem($key): ?array
     {
-        try {
-            $result = $this->client->getItem([
-                'TableName'      => $this->tableName,
-                'Key'            => $this->formatKey($key),
-                'ConsistentRead' => $this->consistentRead,
-            ]);
-        } catch (DynamoDbException $e) {
-            Yii::error("Unable to get item: {$e->getMessage()}");
-            return null;
-        }
+        $result = $this->client->getItem([
+            'TableName'      => $this->tableName,
+            'Key'            => $this->formatKey($key),
+            'ConsistentRead' => $this->consistentRead,
+        ]);
 
         $item = $result['Item'] ?? null;
 
         return $item ? $this->marshaler->unmarshalItem($item) : null;
     }
 
-    public function updateItem($key, $data = null): bool
+    public function updateItem($key, array $attributes = []): bool
     {
-        $attributes = [];
+        return (bool) $this->client->updateItem([
+            'TableName'        => $this->tableName,
+            'Key'              => $this->formatKey($key),
+            'AttributeUpdates' => $this->_marshalAttributeValues($this->_addTtl($attributes)),
+        ]);
+    }
 
-        if ($data) {
-            $attributes += $data;
-        }
-
-        if ($this->ttl) {
-            $attributes += [
-                $this->ttlAttribute => time() + $this->ttl,
-            ];
-        }
-
-        try {
-            return (bool) $this->client->updateItem([
-                'TableName'        => $this->tableName,
-                'Key'              => $this->formatKey($key),
-                'AttributeUpdates' => $this->_marshalAttributeValues($attributes),
-            ]);
-        } catch (DynamoDbException $e) {
-            Yii::error("Unable to update item: {$e->getMessage()}");
-            return false;
-        }
+    public function putItem(array $item): bool
+    {
+        return (bool) $this->client->updateItem([
+            'TableName' => $this->tableName,
+            'Item' => $this->_marshalAttributeValues($this->_addTtl($item)),
+        ]);
     }
 
     public function deleteItem($key): bool
     {
-        try {
-            return (bool) $this->client->deleteItem([
-                'TableName' => $this->tableName,
-                'Key'       => $this->formatKey($key),
-            ]);
-        } catch (DynamoDbException $e) {
-            Yii::error("Unable to delete item: {$e->getMessage()}");
-            return false;
-        }
+        return (bool) $this->client->deleteItem([
+            'TableName' => $this->tableName,
+            'Key'       => $this->formatKey($key),
+        ]);
     }
 
     public function deleteExpired(): void
     {
         $scan = $this->client->getPaginator('Scan', [
             'TableName' => $this->tableName,
-            'AttributesToGet' => [$this->partitionKey],
+            'AttributesToGet' => [$this->partitionKeyAttribute],
             'ScanFilter' => [
                 $this->ttlAttribute => [
                     'ComparisonOperator' => 'LT',
@@ -128,7 +113,7 @@ class DynamoDbConnection extends Component
         // Perform Scan and BatchWriteItem (delete) operations as needed
         foreach ($scan->search('Items') as $item) {
             $batch->delete(
-                [$this->partitionKey => $item[$this->partitionKey]],
+                [$this->partitionKeyAttribute => $item[$this->partitionKeyAttribute]],
                 $this->tableName,
             );
         }
@@ -139,13 +124,9 @@ class DynamoDbConnection extends Component
 
     protected function formatKey($key): array
     {
-        $sortKey = null;
+        $sortKey = $this->defaultSortKey;
 
         if (is_array($key)) {
-            if (!$this->sortKey) {
-                throw new InvalidArgumentException('A sort key must be provided to use compound keys.');
-            }
-
             if (count($key) !== 2) {
                 throw new InvalidArgumentException('Compound keys must be an array with exactly 2 elements.');
             }
@@ -155,16 +136,23 @@ class DynamoDbConnection extends Component
             $partitionKey = $key;
         }
 
-        $partitionKey = "{$this->partitionKeyPrefix}$partitionKey";
-        $keyValue = [
-            $this->partitionKey => $partitionKey,
-        ];
-
-        if ($sortKey && $this->sortKey) {
-            $keyValue[$this->sortKey] = $sortKey;
+        if ($sortKey && !$this->sortKeyAttribute) {
+            throw new InvalidArgumentException('A sort key attribute must be defined to use compound keys.');
         }
 
-        return $this->marshaler->marshalItem($keyValue);
+        $partitionKey = "{$this->partitionKeyPrefix}$partitionKey";
+        $key = [
+            $this->partitionKeyAttribute => $partitionKey,
+        ];
+
+        if ($this->sortKeyAttribute) {
+            if (!$sortKey) {
+                throw new InvalidArgumentException('A sort key attribute was specified, but no value was found.');
+            }
+            $key[$this->sortKeyAttribute] = $sortKey;
+        }
+
+        return $this->marshaler->marshalItem($key);
     }
 
     protected function getClient(): DynamoDbClient
@@ -224,5 +212,16 @@ class DynamoDbConnection extends Component
         return array_map(fn($value) => [
             'Value' => $this->marshaler->marshalValue($value),
         ], $values);
+    }
+
+    private function _addTtl(array $attributes): array
+    {
+        if ($this->ttl) {
+            $attributes += [
+                $this->ttlAttribute => time() + $this->ttl,
+            ];
+        }
+
+        return $attributes;
     }
 }

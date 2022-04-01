@@ -15,6 +15,7 @@ class DynamoDbSession extends Session
      * with a DynamoDB [[Connection]] object.
      */
     public DynamoDBConnection|string|array $dynamoDb = 'dynamoDb';
+    public string $dataAttribute = 'data';
 
     /**
      * @inheritDoc
@@ -36,48 +37,39 @@ class DynamoDbSession extends Session
     /**
      * @inheritDoc
      */
-    public function openSession(string $savePath, string $sessionName): bool
+    public function readSession($id): string
     {
+        $item = $this->dynamoDb->getItem($id);
 
+        return $item[$this->dataAttribute] ?? '';
     }
 
     /**
      * @inheritDoc
      */
-    public function closeSession(): bool
+    public function writeSession($id, $data): bool
     {
+        $data = [
+            $this->dataAttribute => $data,
+            $this->dynamoDb->ttlAttribute => $this->dynamoDb->ttl,
+        ];
 
+        return $this->dynamoDb->updateItem($id, $data);
     }
 
     /**
      * @inheritDoc
      */
-    public function readSession(string $id): string
+    public function destroySession($id): bool
     {
-
+        return $this->dynamoDb->deleteItem($id);
     }
 
     /**
      * @inheritDoc
      */
-    public function writeSession(string $id, string $data): bool
+    public function gcSession($maxLifetime): bool
     {
-
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroySession(string $id): bool
-    {
-
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function gcSession(int $maxLifetime): bool
-    {
-
+        return $this->dynamoDb->deleteExpired();
     }
 }
