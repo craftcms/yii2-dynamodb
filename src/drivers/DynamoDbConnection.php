@@ -27,7 +27,7 @@ class DynamoDbConnection extends Component
     public ?string $sortKeyAttribute = null;
     public ?string $partitionKeyPrefix = null;
     // public $defaultPartitionKey = null;
-    public $defaultSortKey = null;
+    public int|float|string|bool|null $defaultSortKey = null;
     public bool $consistentRead = true;
     public array $batchConfig = [];
     public ?DynamoDbClient $client = null;
