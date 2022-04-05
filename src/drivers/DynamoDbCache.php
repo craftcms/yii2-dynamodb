@@ -7,23 +7,17 @@ use yii\base\InvalidConfigException;
 use yii\caching\Cache;
 use yii\di\Instance;
 
+/**
+ * @property mixed $value
+ */
 class DynamoDbCache extends Cache
 {
-    /**
-     * @var DynamoDBConnection|string|array the DynamoDB [[Connection]] object or the application component ID of the DynamoDB [[Connection]].
-     * This can also be an array that is used to create a DynamoDB [[Connection]] instance in case you do not want to configure
-     * a DynamoDB connection as an application component.
-     * After the Cache object is created, if you want to change this property, you should only assign it
-     * with a DynamoDB [[Connection]] object.
-     */
     public DynamoDBConnection|string|array $dynamoDb = 'dynamoDb';
-
     public string $dataAttribute = 'data';
 
     /**
-     * Initializes the DynamoDb Cache component.
-     * This method will initialize the [[dynamoDb]] property to make sure it refers to a valid DynamoDb connection.
-     * @throws InvalidConfigException if [[dynamoDb]] is invalid.
+     * @inheritDoc
+     * @throws InvalidConfigException
      */
     public function init(): void
     {
@@ -34,14 +28,6 @@ class DynamoDbCache extends Cache
             throw new InvalidConfigException('The `keyPrefix` property is not implemented. Use `DynamoDbConnection::$formatKey` instead.');
         }
     }
-
-    // /**
-    //  * @inheritDoc
-    //  */
-    // public function buildKey($key)
-    // {
-    //     return $this->
-    // }
 
     /**
      * @inheritDoc
