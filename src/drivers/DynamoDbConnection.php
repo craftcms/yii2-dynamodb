@@ -86,19 +86,24 @@ class DynamoDbConnection extends Component
         ]);
     }
 
-    public function deleteExpired(): void
+    public function deleteExpired(): WriteRequestBatch
+    {
+        return $this->scanDelete([
+            $this->ttlAttribute => [
+                'ComparisonOperator' => 'LT',
+                'AttributeValueList' => [
+                    $this->marshaler->marshalValue(time()),
+                ],
+            ],
+        ]);
+    }
+
+    public function scanDelete($filter = []): WriteRequestBatch
     {
         $scan = $this->client->getPaginator('Scan', [
             'TableName' => $this->tableName,
             'AttributesToGet' => array_filter([$this->partitionKeyAttribute, $this->sortKeyAttribute]),
-            'ScanFilter' => [
-                $this->ttlAttribute => [
-                    'ComparisonOperator' => 'LT',
-                    'AttributeValueList' => [
-                        $this->marshaler->marshalValue(time()),
-                    ],
-                ],
-            ],
+            'ScanFilter' => $filter,
         ]);
 
         // Create a WriteRequestBatch for deleting the expired items
@@ -117,6 +122,8 @@ class DynamoDbConnection extends Component
 
         // Delete any remaining items that were not auto-flushed
         $batch->flush();
+
+        return $batch;
     }
 
     protected function formatKey(string|array $key): array

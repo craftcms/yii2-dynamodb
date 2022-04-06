@@ -2,20 +2,27 @@
 
 namespace tests\drivers;
 
+use pixelandtonic\dynamodb\drivers\DynamoDbSession;
 use tests\TestCase;
 
 class SessionTest extends TestCase
 {
-    public function testInit()
+    protected function tearDown(): void
     {
-        $session = $this->getSession();
-
-        $this->assertEquals('id', $session->tableIdAttribute);
-        $this->assertEquals('data', $session->tableDataAttribute);
-        $this->assertEquals('session-test', $session->table);
+        $this->getSession()->dynamoDb->scanDelete();
     }
 
-    public function testReadSession()
+    public function testInit(): void
+    {
+        /** @var DynamoDbSession $session */
+        $session = $this->getSession();
+
+        $this->assertEquals('id', $session->dynamoDb->partitionKeyAttribute);
+        $this->assertEquals('data', $session->dataAttribute);
+        $this->assertEquals('session-test', $session->dynamoDb->tableName);
+    }
+
+    public function testReadSession(): void
     {
         // Arrange
         $id = uniqid('testing-destroy-session-', true);
@@ -29,7 +36,7 @@ class SessionTest extends TestCase
         $this->assertEquals('some-session', $data);
     }
 
-    public function testDestroySession()
+    public function testDestroySession(): void
     {
         // Arrange
         $id = uniqid('testing-destroy-session-', true);
@@ -44,7 +51,7 @@ class SessionTest extends TestCase
     }
 
 
-    public function testWriteSession()
+    public function testWriteSession(): void
     {
         // Arrange
         $id = uniqid('testing-write-session-', true);
