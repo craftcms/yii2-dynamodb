@@ -19,7 +19,7 @@ use yii\base\InvalidArgumentException;
 class DynamoDbConnection extends Component
 {
     public string $tableName;
-    public string $partitionKeyAttribute = 'id';
+    public string $partitionKeyAttribute = 'pk';
     public ?string $sortKeyAttribute = null;
     public bool $consistentRead = true;
     public array $batchConfig = [];
