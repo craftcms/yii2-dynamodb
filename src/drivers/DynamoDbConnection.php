@@ -173,7 +173,7 @@ class DynamoDbConnection extends Component
         return $this->client;
     }
 
-    protected function getCredentials(): callable
+    protected function getCredentials(): Credentials|callable
     {
         return $this->_credentials ?? CredentialProvider::defaultProvider();
     }

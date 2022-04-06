@@ -1,5 +1,4 @@
 <?php
-
 use pixelandtonic\dynamodb\drivers\DynamoDbCache;
 use pixelandtonic\dynamodb\drivers\DynamoDbConnection;
 use pixelandtonic\dynamodb\drivers\DynamoDbQueue;
@@ -33,7 +32,7 @@ return [
                 'ttl' => 60,
                 'formatKey' => static function($key) {
                     return [
-                        'pk' => substr(md5(Craft::$app->id), 0, 5),
+                        'pk' => substr(md5(Yii::$app->id), 0, 5),
                         'sk' => $key,
                     ];
                 }
