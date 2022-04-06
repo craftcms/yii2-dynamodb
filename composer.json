@@ -49,10 +49,18 @@
     "test": "vendor/bin/phpunit --testdox",
     "tables": "make tables"
   },
-    "repositories": [
-      {
-        "type": "composer",
-        "url": "https://asset-packagist.org"
-      }
-    ]
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true
+    },
+    "platform": {
+      "php": "8.0.2"
+    }
+  }
 }
