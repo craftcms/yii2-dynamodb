@@ -4,6 +4,7 @@ namespace tests\drivers;
 
 use pixelandtonic\dynamodb\drivers\DynamoDbSession;
 use tests\TestCase;
+use Yii;
 
 class SessionTest extends TestCase
 {
@@ -14,23 +15,28 @@ class SessionTest extends TestCase
 
     public function testInit(): void
     {
-        /** @var DynamoDbSession $session */
-        $session = $this->getSession();
+        $this->assertEquals('id', $this->getSession()->dynamoDb->partitionKeyAttribute);
+        $this->assertEquals('data', $this->getSession()->dataAttribute);
+        $this->assertEquals('session-test', $this->getSession()->dynamoDb->tableName);
+    }
 
-        $this->assertEquals('id', $session->dynamoDb->partitionKeyAttribute);
-        $this->assertEquals('data', $session->dataAttribute);
-        $this->assertEquals('session-test', $session->dynamoDb->tableName);
+    public function testFlash()
+    {
+        $this->getSession()->setFlash('test-flash', 'test-value');
+        $this->assertEquals(
+            'test-value',
+            $this->getSession()->getFlash('test-flash'),
+        );
     }
 
     public function testReadSession(): void
     {
         // Arrange
         $id = uniqid('testing-destroy-session-', true);
-        $session = $this->getSession();
 
         // Act
-        $session->writeSession($id, 'some-session');
-        $data = $session->readSession($id);
+        $this->getSession()->writeSession($id, 'some-session');
+        $data = $this->getSession()->readSession($id);
 
         // Assert
         $this->assertEquals('some-session', $data);
@@ -40,27 +46,36 @@ class SessionTest extends TestCase
     {
         // Arrange
         $id = uniqid('testing-destroy-session-', true);
-        $session = $this->getSession();
 
         // Act
-        $session->writeSession($id, 'some-session');
-        $deleted = $session->destroySession($id);
+        $this->getSession()->writeSession($id, 'some-session');
+        $deleted = $this->getSession()->destroySession($id);
 
         // Assert
         $this->assertTrue($deleted);
     }
 
-
     public function testWriteSession(): void
     {
         // Arrange
         $id = uniqid('testing-write-session-', true);
-        $session = $this->getSession();
 
         // Act
-        $stored = $session->writeSession($id, 'some-session');
+        $stored = $this->getSession()->writeSession($id, 'some-session');
 
         // Assert
         $this->assertTrue($stored);
+    }
+
+    public function testGarbageCollection(): void
+    {
+        $id = uniqid('testing-gc-session-', true);
+
+        $this->getSession()->writeSession($id, 'some-session');
+        sleep($this->getSession()->dynamoDb->ttl + 1);
+        $this->getSession()->gcSession(0);
+        $data = $this->getSession()->readSession($id);
+
+        $this->assertEquals('', $data);
     }
 }

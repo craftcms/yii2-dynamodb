@@ -17,6 +17,7 @@ $config = require(__DIR__ . '/config/app.php');
 
 try {
     $app = new Application($config);
+    $app->getSession()->open();
 } catch (Exception $e) {
     die($e->getMessage());
 }

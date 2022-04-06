@@ -8,6 +8,7 @@ $dynamoDbConfig = [
     'class' => DynamoDbConnection::class,
     'endpoint' => 'http://localhost:8000',
     'region' => 'local',
+    'ttl' => 2,
     'credentials' => [
         'key' => 'local',
         'secret' => 'local',
@@ -29,7 +30,6 @@ return [
             'dynamoDb' => [
                 'tableName' => 'cache-test',
                 'sortKeyAttribute' => 'sk',
-                'ttl' => 60,
                 'formatKey' => static function($key) {
                     return [
                         'pk' => substr(md5(Yii::$app->id), 0, 5),
@@ -41,7 +41,6 @@ return [
         'session' => [
             'class' => DynamoDbSession::class,
             'dynamoDb' => [
-                'ttl' => 60,
                 'tableName' => 'session-test',
                 'partitionKeyAttribute' => 'id',
             ] + $dynamoDbConfig,
