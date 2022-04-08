@@ -6,6 +6,9 @@ ENDPOINT_URL ?= http://localhost:8000
 AWS_ACCESS_KEY_ID = local
 AWS_SECRET_ACCESS_KEY = local
 
+configure:
+	aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+	aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 cache:
 	aws --endpoint-url=${ENDPOINT_URL} --region=${REGION} \
 	dynamodb create-table --table-name ${CACHE_TABLE_NAME} \
@@ -35,4 +38,4 @@ queue:
 		AttributeName=pk,KeyType=HASH \
 	--provisioned-throughput \
 		ReadCapacityUnits=5,WriteCapacityUnits=5
-tables: cache sessions queue
+tables: configure cache sessions queue
