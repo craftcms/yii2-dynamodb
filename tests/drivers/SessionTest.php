@@ -10,22 +10,29 @@ class SessionTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->getSession()->dynamoDb->scanDelete();
+        $items = static::getSession()->dynamoDb->scan();
+        static::getSession()->dynamoDb->batchDelete($items);
     }
 
     public function testInit(): void
     {
-        $this->assertEquals('id', $this->getSession()->dynamoDb->partitionKeyAttribute);
-        $this->assertEquals('data', $this->getSession()->dataAttribute);
-        $this->assertEquals('session-test', $this->getSession()->dynamoDb->tableName);
+        $this->assertEquals('id', static::getSession()->dynamoDb->partitionKeyAttribute);
+        $this->assertEquals('data', static::getSession()->dataAttribute);
+        $this->assertEquals('session-test', static::getSession()->dynamoDb->tableName);
     }
 
     public function testFlash()
     {
-        $this->getSession()->setFlash('test-flash', 'test-value');
+        static::getSession()->setFlash('test-flash', 'test-value');
         $this->assertEquals(
             'test-value',
-            $this->getSession()->getFlash('test-flash'),
+            static::getSession()->getFlash('test-flash', null, true),
+        );
+
+        // Should be deleted after first getFlash
+        $this->assertEquals(
+            null,
+            static::getSession()->getFlash('test-flash'),
         );
     }
 
@@ -35,8 +42,8 @@ class SessionTest extends TestCase
         $id = uniqid('testing-destroy-session-', true);
 
         // Act
-        $this->getSession()->writeSession($id, 'some-session');
-        $data = $this->getSession()->readSession($id);
+        static::getSession()->writeSession($id, 'some-session');
+        $data = static::getSession()->readSession($id);
 
         // Assert
         $this->assertEquals('some-session', $data);
@@ -48,8 +55,8 @@ class SessionTest extends TestCase
         $id = uniqid('testing-destroy-session-', true);
 
         // Act
-        $this->getSession()->writeSession($id, 'some-session');
-        $deleted = $this->getSession()->destroySession($id);
+        static::getSession()->writeSession($id, 'some-session');
+        $deleted = static::getSession()->destroySession($id);
 
         // Assert
         $this->assertTrue($deleted);
@@ -61,7 +68,7 @@ class SessionTest extends TestCase
         $id = uniqid('testing-write-session-', true);
 
         // Act
-        $stored = $this->getSession()->writeSession($id, 'some-session');
+        $stored = static::getSession()->writeSession($id, 'some-session');
 
         // Assert
         $this->assertTrue($stored);
@@ -71,10 +78,10 @@ class SessionTest extends TestCase
     {
         $id = uniqid('testing-gc-session-', true);
 
-        $this->getSession()->writeSession($id, 'some-session');
-        sleep($this->getSession()->dynamoDb->ttl + 1);
-        $this->getSession()->gcSession(0);
-        $data = $this->getSession()->readSession($id);
+        static::getSession()->writeSession($id, 'some-session');
+        sleep(static::getSession()->dynamoDb->ttl + 1);
+        static::getSession()->gcSession(0);
+        $data = static::getSession()->readSession($id);
 
         $this->assertEquals('', $data);
     }

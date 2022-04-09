@@ -7,6 +7,7 @@ use Aws\Credentials\Credentials;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\WriteRequestBatch;
+use Aws\ResultPaginator;
 use Closure;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;
@@ -88,29 +89,38 @@ class DynamoDbConnection extends Component
 
     public function deleteExpired(): WriteRequestBatch
     {
-        return $this->scanDelete([
-            $this->ttlAttribute => [
-                'ComparisonOperator' => 'LT',
-                'AttributeValueList' => [
-                    $this->marshaler->marshalValue(time()),
+        $scan = $this->scan([
+            'ScanFilter' => [
+                $this->ttlAttribute => [
+                    'ComparisonOperator' => 'LT',
+                    'AttributeValueList' => [
+                        $this->marshaler->marshalValue(time()),
+                    ],
                 ],
-            ],
+            ]
         ]);
+
+        return $this->batchDelete($scan);
     }
 
-    public function scanDelete($filter = []): WriteRequestBatch
+    public function scan($attributes = []): ResultPaginator
     {
-        $scan = $this->client->getPaginator('Scan', [
+        return $this->client->getPaginator('Scan', [
             'TableName' => $this->tableName,
-            'AttributesToGet' => array_filter([$this->partitionKeyAttribute, $this->sortKeyAttribute]),
-            'ScanFilter' => $filter,
-        ]);
+            'AttributesToGet' => array_filter([
+                $this->partitionKeyAttribute,
+                $this->sortKeyAttribute,
+            ]),
+        ] + $attributes);
+    }
 
+    public function batchDelete(ResultPaginator $items): WriteRequestBatch
+    {
         // Create a WriteRequestBatch for deleting the expired items
         $batch = new WriteRequestBatch($this->client, $this->batchConfig);
 
         // Perform Scan and BatchWriteItem (delete) operations as needed
-        foreach ($scan->search('Items') as $item) {
+        foreach ($items->search('Items') as $item) {
             $batch->delete(
                 array_filter([
                     $this->partitionKeyAttribute => $item[$this->partitionKeyAttribute],

@@ -8,22 +8,22 @@ use pixelandtonic\dynamodb\drivers\DynamoDbSession;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function getDynamoDb(): DynamoDbConnection
+    protected static function getDynamoDb(): DynamoDbConnection
     {
         return \Yii::$app->getDynamoDb();
     }
 
-    protected function getCache(): DynamoDbCache
+    protected static function getCache(): DynamoDbCache
     {
         return \Yii::$app->getCache();
     }
 
-    protected function getSession(): DynamoDbSession
+    protected static function getSession(): DynamoDbSession
     {
         return \Yii::$app->getSession();
     }
 
-    protected function getQueue(string $id = 'queue'): DynamoDbQueue
+    protected static function getQueue(string $id = 'queue'): DynamoDbQueue
     {
         return \Yii::$app->get($id);
     }
