@@ -36,7 +36,7 @@ class DynamoDbCache extends Cache
     {
         $result = $this->dynamoDb->getItem($key);
 
-        return $result[$this->dataAttribute] ?? null;
+        return $result[$this->dataAttribute] ?? false;
     }
 
     /**
@@ -76,7 +76,8 @@ class DynamoDbCache extends Cache
      */
     protected function flushValues(): bool
     {
-        Yii::error('Flush operations are not supported.');
-        return false;
+        $this->dynamoDb->deleteMany();
+
+        return true;
     }
 }

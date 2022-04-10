@@ -89,7 +89,7 @@ class DynamoDbConnection extends Component
 
     public function deleteExpired(): WriteRequestBatch
     {
-        $scan = $this->scan([
+        return $this->deleteMany([
             'ScanFilter' => [
                 $this->ttlAttribute => [
                     'ComparisonOperator' => 'LT',
@@ -99,23 +99,18 @@ class DynamoDbConnection extends Component
                 ],
             ]
         ]);
-
-        return $this->batchDelete($scan);
     }
 
-    public function scan($attributes = []): ResultPaginator
+    public function deleteMany($attributes = []): WriteRequestBatch
     {
-        return $this->client->getPaginator('Scan', [
+        $items = $this->client->getPaginator('Scan', [
             'TableName' => $this->tableName,
             'AttributesToGet' => array_filter([
                 $this->partitionKeyAttribute,
                 $this->sortKeyAttribute,
             ]),
         ] + $attributes);
-    }
 
-    public function batchDelete(ResultPaginator $items): WriteRequestBatch
-    {
         // Create a WriteRequestBatch for deleting the expired items
         $batch = new WriteRequestBatch($this->client, $this->batchConfig);
 

@@ -10,8 +10,7 @@ class SessionTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $items = static::getSession()->dynamoDb->scan();
-        static::getSession()->dynamoDb->batchDelete($items);
+        static::getSession()->dynamoDb->deleteMany();
     }
 
     public function testInit(): void
@@ -29,7 +28,7 @@ class SessionTest extends TestCase
             static::getSession()->getFlash('test-flash', null, true),
         );
 
-        // Should be deleted after first getFlash
+        // Should be deleted after preceding getFlash
         $this->assertEquals(
             null,
             static::getSession()->getFlash('test-flash'),
