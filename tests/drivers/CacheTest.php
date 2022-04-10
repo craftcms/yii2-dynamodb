@@ -7,7 +7,7 @@ use tests\TestCase;
 
 class CacheTest extends TestCase
 {
-    public function testFlush()
+    public function testFlush(): void
     {
         // Arrange
         $key1 = uniqid('testing-flush-', true);
@@ -24,7 +24,7 @@ class CacheTest extends TestCase
         $this->assertFalse($cache->exists($key2));
     }
 
-    public function testDeleteValue()
+    public function testDeleteValue(): void
     {
         // Arrange
         $key = uniqid('testing-delete-', true);
@@ -39,7 +39,7 @@ class CacheTest extends TestCase
         $this->assertFalse($cache->exists($key));
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         // Arrange
         $key = uniqid('testing-exists-', true);
@@ -55,7 +55,7 @@ class CacheTest extends TestCase
         $this->assertFalse($doesNotExist);
     }
 
-    public function testSetValue()
+    public function testSetValue(): void
     {
         // Arrange
         $key = uniqid('testing-set-', true);
@@ -68,7 +68,7 @@ class CacheTest extends TestCase
         $this->assertTrue($saved);
     }
 
-    public function testGetValue()
+    public function testGetValue(): void
     {
         $key = uniqid('testing-get-', true);
         $cache = static::getCache();

@@ -47,9 +47,11 @@ return [
         ],
         'queue' => [
             'class' => DynamoDbQueue::class,
+            'dataAttribute' => 'job',
             'dynamoDb' => [
                 'tableName' => 'queue-test',
-                'formatKey' => static fn($key) => "queue-prefix#$key"
+                'formatKey' => static fn($key) => "queue-prefix#$key",
+                'partitionKeyAttribute' => 'id',
             ] + $dynamoDbConfig,
         ],
         'request' => [

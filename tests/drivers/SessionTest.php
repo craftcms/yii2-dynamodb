@@ -15,7 +15,7 @@ class SessionTest extends TestCase
         $this->assertEquals('session-test', static::getSession()->dynamoDb->tableName);
     }
 
-    public function testFlash()
+    public function testFlash(): void
     {
         static::getSession()->setFlash('test-flash', 'test-value');
         $this->assertEquals(
