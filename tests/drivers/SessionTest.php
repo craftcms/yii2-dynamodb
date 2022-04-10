@@ -8,11 +8,6 @@ use Yii;
 
 class SessionTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        static::getSession()->dynamoDb->deleteMany();
-    }
-
     public function testInit(): void
     {
         $this->assertEquals('id', static::getSession()->dynamoDb->partitionKeyAttribute);

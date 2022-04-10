@@ -12,7 +12,7 @@ class CacheTest extends TestCase
         // Arrange
         $key1 = uniqid('testing-flush-', true);
         $key2 = uniqid('testing-flush-2', true);
-        $cache = new DynamoDbCache($this->getCache());
+        $cache = static::getCache();
         $cache->set($key1, ['some' => 'value']);
         $cache->set($key2, ['another' => 'value']);
 
@@ -24,12 +24,11 @@ class CacheTest extends TestCase
         $this->assertFalse($cache->exists($key2));
     }
 
-
     public function testDeleteValue()
     {
         // Arrange
         $key = uniqid('testing-delete-', true);
-        $cache = new DynamoDbCache($this->getCache());
+        $cache = static::getCache();
         $cache->set($key, ['some' => 'value']);
 
         // Act
@@ -44,7 +43,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-exists-', true);
-        $cache = new DynamoDbCache($this->getCache());
+        $cache = static::getCache();
 
         // Act
         $cache->set($key, ['some' => 'value']);
@@ -60,7 +59,7 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-set-', true);
-        $cache = new DynamoDbCache($this->getCache());
+        $cache = static::getCache();
 
         // Act
         $saved = $cache->set($key, ['some' => 'value']);
@@ -72,7 +71,7 @@ class CacheTest extends TestCase
     public function testGetValue()
     {
         $key = uniqid('testing-get-', true);
-        $cache = new DynamoDbCache($this->getCache());
+        $cache = static::getCache();
         $encoded = ['some' => 'value'];
         $cache->set($key, ['some' => 'value']);
 
