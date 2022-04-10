@@ -51,7 +51,7 @@ return [
             'dynamoDb' => [
                 'tableName' => 'queue-test',
                 'formatKey' => static fn($key) => "queue-prefix#$key",
-                'partitionKeyAttribute' => 'id',
+                'ttl' => null,
             ] + $dynamoDbConfig,
         ],
         'request' => [
