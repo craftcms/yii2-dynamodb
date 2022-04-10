@@ -6,6 +6,7 @@ use pixelandtonic\dynamodb\drivers\DynamoDbQueue;
 use tests\app\SimpleTestJob;
 use tests\TestCase;
 use yii\base\InvalidArgumentException;
+use yii\queue\Queue;
 
 class QueueTest extends TestCase
 {
@@ -15,30 +16,33 @@ class QueueTest extends TestCase
         $queue = static::getQueue();
 
         // Assert
-        $this->assertEquals('id', static::getQueue()->dynamoDb->partitionKeyAttribute);
+        $this->assertEquals('pk', static::getQueue()->dynamoDb->partitionKeyAttribute);
         $this->assertEquals('job', static::getQueue()->dataAttribute);
         $this->assertEquals('queue-test', static::getQueue()->dynamoDb->tableName);
 
     }
 
-    // public function testPushMessage(): void
-    // {
-    //     // Arrange
-    //     $queue = new DynamoDbQueue(static::getQueue());
-    //     $job = new SimpleTestJob();
-    //
-    //     // Act
-    //     $id = $queue->push($job);
-    //
-    //     // Assert
-    //     $this->assertNotNull($id);
-    //     $this->assertStringContainsString('queue-prefix#', $id);
-    // }
+    public function testPushMessage(): void
+    {
+        // Arrange
+        $queue = static::getQueue();
+        $job = new SimpleTestJob();
+
+        // Act
+        $id = $queue->push($job);
+        $item = static::getQueue()->dynamoDb->getItem($id);
+        $status = $queue->status($id);
+
+        // Assert
+        $this->assertNotNull($id);
+        $this->assertStringStartsWith('queue-prefix#', $item['pk']);
+        $this->assertEquals(Queue::STATUS_WAITING, $status);
+    }
 
     // public function testStatusThrowsErrorWhenNotFound(): void
     // {
     //     // Arrange
-    //     $queue = new DynamoDbQueue(static::getQueue());
+    //     $queue = static::getQueue();
     //     $id = 'something-not-found';
     //
     //     // Assert
@@ -49,17 +53,4 @@ class QueueTest extends TestCase
     //     $queue->status($id);
     // }
     //
-    // public function testStatusWaiting(): void
-    // {
-    //     // Arrange
-    //     $queue = new DynamoDbQueue(static::getQueue());
-    //     $job = new SimpleTestJob();
-    //     $id = $queue->push($job);
-    //
-    //     // Act
-    //     $status = $queue->status($id);
-    //
-    //     // Assert
-    //     $this->assertEquals(1, $status);
-    // }
 }

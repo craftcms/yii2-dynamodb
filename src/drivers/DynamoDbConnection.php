@@ -7,6 +7,7 @@ use Aws\Credentials\Credentials;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\WriteRequestBatch;
+use Aws\Result;
 use Aws\ResultPaginator;
 use Closure;
 use yii\base\Component;
@@ -62,26 +63,27 @@ class DynamoDbConnection extends Component
         return $item ? $this->marshaler->unmarshalItem($item) : null;
     }
 
-    public function updateItem($key, array $attributes = []): bool
+    public function updateItem($key, array $attributes = []): Result
     {
-        return (bool) $this->client->updateItem([
+        return $this->client->updateItem([
             'TableName'        => $this->tableName,
             'Key'              => $this->formatKey($key),
             'AttributeUpdates' => $this->_marshalAttributeValues($this->_addTtl($attributes)),
+            'ReturnValues'     => 'ALL_NEW',
         ]);
     }
 
-    public function putItem(array $item): bool
+    public function putItem(array $item): Result
     {
-        return (bool) $this->client->updateItem([
+        return $this->client->updateItem([
             'TableName' => $this->tableName,
             'Item' => $this->_marshalAttributeValues($this->_addTtl($item)),
         ]);
     }
 
-    public function deleteItem($key): bool
+    public function deleteItem($key): Result
     {
-        return (bool) $this->client->deleteItem([
+        return $this->client->deleteItem([
             'TableName' => $this->tableName,
             'Key'       => $this->formatKey($key),
         ]);

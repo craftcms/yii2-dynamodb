@@ -45,7 +45,7 @@ class DynamoDbSession extends Session
      */
     public function writeSession($id, $data): bool
     {
-        return $this->dynamoDb->updateItem($id, [
+        return (bool) $this->dynamoDb->updateItem($id, [
             $this->dataAttribute => $data,
         ]);
     }
@@ -55,7 +55,7 @@ class DynamoDbSession extends Session
      */
     public function destroySession($id): bool
     {
-        return $this->dynamoDb->deleteItem($id);
+        return (bool) $this->dynamoDb->deleteItem($id);
     }
 
     /**

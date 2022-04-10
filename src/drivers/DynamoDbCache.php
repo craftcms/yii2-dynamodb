@@ -52,7 +52,7 @@ class DynamoDbCache extends Cache
             $data[$this->dynamoDb->ttlAttribute] = $duration;
         }
 
-        return $this->dynamoDb->updateItem($key, $data);
+        return (bool) $this->dynamoDb->updateItem($key, $data);
     }
 
     /**
@@ -68,7 +68,7 @@ class DynamoDbCache extends Cache
      */
     protected function deleteValue($key): bool
     {
-        return $this->dynamoDb->deleteItem($key);
+        return (bool) $this->dynamoDb->deleteItem($key);
     }
 
     /**
