@@ -12,9 +12,6 @@ class QueueTest extends TestCase
 {
     public function testInit(): void
     {
-        // Arrange
-        $queue = static::getQueue();
-
         // Assert
         $this->assertEquals('pk', static::getQueue()->dynamoDb->partitionKeyAttribute);
         $this->assertEquals('job', static::getQueue()->dataAttribute);
@@ -25,13 +22,12 @@ class QueueTest extends TestCase
     public function testPushMessage(): void
     {
         // Arrange
-        $queue = static::getQueue();
         $job = new SimpleTestJob();
 
         // Act
-        $id = $queue->push($job);
+        $id = static::getQueue()->push($job);
         $item = static::getQueue()->dynamoDb->getItem($id);
-        $status = $queue->status($id);
+        $status = static::getQueue()->status($id);
 
         // Assert
         $this->assertNotNull($id);
@@ -39,18 +35,25 @@ class QueueTest extends TestCase
         $this->assertEquals(Queue::STATUS_WAITING, $status);
     }
 
-    // public function testStatusThrowsErrorWhenNotFound(): void
-    // {
-    //     // Arrange
-    //     $queue = static::getQueue();
-    //     $id = 'something-not-found';
-    //
-    //     // Assert
-    //     $this->expectException(InvalidArgumentException::class);
-    //     $this->expectExceptionMessage("Unknown message ID: $id.");
-    //
-    //     // Act
-    //     $queue->status($id);
-    // }
-    //
+    public function testRun(): void
+    {
+        // Arrange
+        $job = new SimpleTestJob();
+
+        // Act
+        $id = static::getQueue()->push($job);
+        $item = static::getQueue()->dynamoDb->getItem($id);
+
+        static::getQueue()->execute(
+            $id,
+            $item['job'],
+            $item['ttr'],
+            1,
+            null
+        );
+
+        $status = static::getQueue()->status($id);
+
+        $this->assertEquals(Queue::STATUS_DONE, $status);
+    }
 }

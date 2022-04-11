@@ -6,9 +6,9 @@ use Aws\DynamoDb\Exception\DynamoDbException;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
-use yii\queue\Queue;
+use yii\queue\sqs\DynamoDbQueueCommand;
 
-class DynamoDbQueue extends Queue
+class DynamoDbQueue extends \yii\queue\cli\Queue
 {
     public DynamoDBConnection|string|array $dynamoDb = 'dynamoDb';
     public string $dataAttribute = 'data';
@@ -21,6 +21,31 @@ class DynamoDbQueue extends Queue
     {
         parent::init();
         $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function status($id): int
+    {
+        $item = $this->dynamoDb->getItem($id);
+
+        if ($item) {
+            return self::STATUS_WAITING;
+        }
+
+        return self::STATUS_DONE;
+    }
+
+    public function execute($id, $message, $ttr, $attempt, $workerPid): bool
+    {
+        $success = parent::execute($id, $message, $ttr, $attempt, $workerPid);
+
+        if ($success) {
+            $this->dynamoDb->deleteItem($id);
+        }
+
+        return $success;
     }
 
     /**
@@ -45,31 +70,5 @@ class DynamoDbQueue extends Queue
         }
 
         return $id;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function status($id): int
-    {
-        if (!$id) {
-            return self::STATUS_WAITING;
-        }
-
-        $item = $this->dynamoDb->getItem($id);
-
-        if ($item) {
-            return self::STATUS_WAITING;
-        }
-
-        // if (!$item['reserved_at']) {
-        //     return self::STATUS_WAITING;
-        // }
-        //
-        // if (!$item['done_at']) {
-        //     return self::STATUS_RESERVED;
-        // }
-
-        return self::STATUS_DONE;
     }
 }
