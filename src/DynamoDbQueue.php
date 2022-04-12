@@ -6,9 +6,10 @@ use Aws\DynamoDb\Exception\DynamoDbException;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
+use yii\queue\cli\Queue;
 use yii\queue\sqs\DynamoDbQueueCommand;
 
-class DynamoDbQueue extends \yii\queue\cli\Queue
+class DynamoDbQueue extends Queue
 {
     public DynamoDBConnection|string|array $dynamoDb = 'dynamoDb';
     public string $dataAttribute = 'data';
@@ -29,7 +30,12 @@ class DynamoDbQueue extends \yii\queue\cli\Queue
      */
     public function status($id): int
     {
-        $item = $this->dynamoDb->getItem($id);
+        try {
+            $item = $this->dynamoDb->getItem($id);
+        } catch (DynamoDbException $e) {
+            Yii::error("Unable to get job status: {$e->getMessage()}", __METHOD__);
+            return self::STATUS_WAITING;
+        }
 
         if ($item) {
             return self::STATUS_WAITING;
@@ -43,7 +49,11 @@ class DynamoDbQueue extends \yii\queue\cli\Queue
         $success = parent::execute($id, $message, $ttr, $attempt, $workerPid);
 
         if ($success) {
-            $this->dynamoDb->deleteItem($id);
+            try {
+                $this->dynamoDb->deleteItem($id);
+            } catch (DynamoDbException $e) {
+                Yii::error("Unable to delete completed job: {$e->getMessage()}", __METHOD__);
+            }
         }
 
         return $success;
@@ -65,7 +75,7 @@ class DynamoDbQueue extends \yii\queue\cli\Queue
                 'pushed_at' => time(),
             ]);
         } catch (DynamoDbException $e) {
-            Yii::warning("Unable to push message: {$e->getMessage()}", __METHOD__);
+            Yii::error("Unable to push message: {$e->getMessage()}", __METHOD__);
 
             return null;
         }
