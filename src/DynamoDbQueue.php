@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelandtonic\dynamodb\drivers;
+namespace pixelandtonic\dynamodb;
 
 use Aws\DynamoDb\Exception\DynamoDbException;
 use Yii;

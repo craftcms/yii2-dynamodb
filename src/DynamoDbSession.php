@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelandtonic\dynamodb\drivers;
+namespace pixelandtonic\dynamodb;
 
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
@@ -17,9 +17,16 @@ class DynamoDbSession extends Session
      */
     public function init(): void
     {
-        $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
-
         parent::init();
+        $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
+        $iniTimeout = $this->getTimeout();
+        $this->setTimeout($iniTimeout);
+    }
+
+    public function setTimeout($value): void
+    {
+        parent::setTimeout($value);
+        $this->dynamoDb->ttl = $value;
     }
 
     /**
@@ -36,8 +43,16 @@ class DynamoDbSession extends Session
     public function readSession($id): string
     {
         $item = $this->dynamoDb->getItem($id);
+        $data = $item[$this->dataAttribute] ?? '';
+        $ttl = $item[$this->dynamoDb->ttlAttribute] ?? null;
 
-        return $item[$this->dataAttribute] ?? '';
+        if ($ttl && $ttl <= time()) {
+            $this->destroySession($id);
+
+            return '';
+        }
+
+        return $data;
     }
 
     /**

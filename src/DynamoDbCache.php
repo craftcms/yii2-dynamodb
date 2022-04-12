@@ -1,8 +1,7 @@
 <?php
 
-namespace pixelandtonic\dynamodb\drivers;
+namespace pixelandtonic\dynamodb;
 
-use Yii;
 use yii\base\InvalidConfigException;
 use yii\caching\Cache;
 use yii\di\Instance;
@@ -25,7 +24,7 @@ class DynamoDbCache extends Cache
         $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
 
         if ($this->keyPrefix) {
-            throw new InvalidConfigException('The `keyPrefix` property is not implemented. Use `DynamoDbConnection::$formatKey` instead.');
+            throw new InvalidConfigException('The `keyPrefix` property is not supported. Use `DynamoDbConnection::$formatKey` instead.');
         }
     }
 

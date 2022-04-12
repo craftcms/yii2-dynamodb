@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelandtonic\dynamodb\drivers;
+namespace pixelandtonic\dynamodb;
 
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;
@@ -63,12 +63,12 @@ class DynamoDbConnection extends Component
         return $item ? $this->marshaler->unmarshalItem($item) : null;
     }
 
-    public function updateItem($key, array $attributes = []): Result
+    public function updateItem($key, array $item = []): Result
     {
         return $this->client->updateItem([
             'TableName'        => $this->tableName,
             'Key'              => $this->formatKey($key),
-            'AttributeUpdates' => $this->_marshalAttributeValues($this->_addTtl($attributes)),
+            'AttributeUpdates' => $this->_marshalAttributeValues($this->_addTtl($item)),
             'ReturnValues'     => 'ALL_NEW',
         ]);
     }
