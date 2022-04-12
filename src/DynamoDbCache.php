@@ -22,6 +22,7 @@ class DynamoDbCache extends Cache
     {
         parent::init();
         $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
+        $this->dynamoDb->tableName = $this->dynamoDb->tableName ?? 'cache';
 
         if ($this->keyPrefix) {
             throw new InvalidConfigException('The `keyPrefix` property is not supported. Use `DynamoDbConnection::$formatKey` instead.');

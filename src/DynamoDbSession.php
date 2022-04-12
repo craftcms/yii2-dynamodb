@@ -26,6 +26,7 @@ class DynamoDbSession extends Session
         parent::init();
         $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
         $this->setTimeout($this->getTimeout());
+        $this->dynamoDb->tableName = $this->dynamoDb->tableName ?? 'sessions';
     }
 
     public function setTimeout($value): void
