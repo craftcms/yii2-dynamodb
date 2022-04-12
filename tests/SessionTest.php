@@ -1,10 +1,6 @@
 <?php
 
-namespace tests\drivers;
-
-use pixelandtonic\dynamodb\drivers\DynamoDbSession;
-use tests\TestCase;
-use Yii;
+namespace tests;
 
 class SessionTest extends TestCase
 {
@@ -68,13 +64,12 @@ class SessionTest extends TestCase
         $this->assertTrue($stored);
     }
 
-    public function testGarbageCollection(): void
+    public function testExpired(): void
     {
         $id = uniqid('testing-gc-session-', true);
 
         static::getSession()->writeSession($id, 'some-session');
-        sleep(static::getSession()->dynamoDb->ttl + 1);
-        static::getSession()->gcSession(0);
+        sleep(static::getSession()->getTimeout() + 1);
         $data = static::getSession()->readSession($id);
 
         $this->assertEquals('', $data);

@@ -2,29 +2,29 @@
 
 namespace tests;
 
-use pixelandtonic\dynamodb\drivers\DynamoDbCache;
-use pixelandtonic\dynamodb\drivers\DynamoDbQueue;
-use pixelandtonic\dynamodb\drivers\DynamoDbSession;
+use pixelandtonic\dynamodb\DynamoDbQueue;
+use Yii;
+use yii\base\InvalidConfigException;
+use yii\caching\CacheInterface;
+use yii\web\Session;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected static function getDynamoDb(): DynamoDbConnection
+    protected static function getCache(): CacheInterface
     {
-        return \Yii::$app->getDynamoDb();
+        return Yii::$app->getCache();
     }
 
-    protected static function getCache(): DynamoDbCache
+    protected static function getSession(): Session
     {
-        return \Yii::$app->getCache();
+        return Yii::$app->getSession();
     }
 
-    protected static function getSession(): DynamoDbSession
-    {
-        return \Yii::$app->getSession();
-    }
-
+    /**
+     * @throws InvalidConfigException
+     */
     protected static function getQueue(string $id = 'queue'): DynamoDbQueue
     {
-        return \Yii::$app->get($id);
+        return Yii::$app->get($id);
     }
 }

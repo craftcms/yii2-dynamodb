@@ -1,8 +1,8 @@
 <?php
-use pixelandtonic\dynamodb\drivers\DynamoDbCache;
-use pixelandtonic\dynamodb\drivers\DynamoDbConnection;
-use pixelandtonic\dynamodb\drivers\DynamoDbQueue;
-use pixelandtonic\dynamodb\drivers\DynamoDbSession;
+use pixelandtonic\dynamodb\DynamoDbCache;
+use pixelandtonic\dynamodb\DynamoDbConnection;
+use pixelandtonic\dynamodb\DynamoDbQueue;
+use pixelandtonic\dynamodb\DynamoDbSession;
 
 $dynamoDbConfig = [
     'class' => DynamoDbConnection::class,
@@ -40,6 +40,7 @@ return [
         ],
         'session' => [
             'class' => DynamoDbSession::class,
+            'timeout' => 2,
             'dynamoDb' => [
                 'tableName' => 'session-test',
                 'partitionKeyAttribute' => 'id',

@@ -19,14 +19,17 @@ class DynamoDbSession extends Session
     {
         parent::init();
         $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
-        $iniTimeout = $this->getTimeout();
-        $this->setTimeout($iniTimeout);
+        $this->setTimeout($this->getTimeout());
     }
 
     public function setTimeout($value): void
     {
         parent::setTimeout($value);
-        $this->dynamoDb->ttl = $value;
+
+        // Prevent premature set from constructor
+        if ($this->dynamoDb instanceof DynamoDbConnection) {
+            $this->dynamoDb->ttl = $value;
+        }
     }
 
     /**

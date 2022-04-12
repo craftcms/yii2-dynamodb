@@ -1,11 +1,8 @@
 <?php
 
-namespace tests\drivers;
+namespace tests;
 
-use pixelandtonic\dynamodb\drivers\DynamoDbQueue;
 use tests\app\SimpleTestJob;
-use tests\TestCase;
-use yii\base\InvalidArgumentException;
 use yii\queue\Queue;
 
 class QueueTest extends TestCase

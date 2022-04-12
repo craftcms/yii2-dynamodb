@@ -8,7 +8,6 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\WriteRequestBatch;
 use Aws\Result;
-use Aws\ResultPaginator;
 use Closure;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;

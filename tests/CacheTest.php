@@ -1,8 +1,7 @@
 <?php
 
-namespace tests\cache\driver;
+namespace tests\cache;
 
-use pixelandtonic\dynamodb\drivers\DynamoDbCache;
 use tests\TestCase;
 
 class CacheTest extends TestCase
