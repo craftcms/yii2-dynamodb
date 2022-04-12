@@ -12,6 +12,14 @@ class DynamoDbSession extends Session
     public string $dataAttribute = 'data';
 
     /**
+     * While a gcSession method is provided, it should not be used in most cases.
+     * Instead, configure DynamoDB's TTL settings to expire entries based on the ttl attribute.
+     *
+     * @inheritdoc
+     */
+    public $gCProbability = 0;
+
+    /**
      * @inheritDoc
      * @throws InvalidConfigException
      */
