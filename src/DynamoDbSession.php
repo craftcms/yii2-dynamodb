@@ -12,12 +12,10 @@ class DynamoDbSession extends Session
     public string $dataAttribute = 'data';
 
     /**
-     * While a gcSession method is provided, it should not be used in most cases.
-     * Instead, configure DynamoDB's TTL settings to expire entries based on the ttl attribute.
-     *
-     * @inheritdoc
+     * @var bool Whether to allow garbage collection. Most often this should be false,
+     *           and DynamoDB's ttl settings should be used.
      */
-    public $gCProbability = 0;
+    public bool $allowGc = false;
 
     /**
      * @inheritDoc
@@ -89,7 +87,9 @@ class DynamoDbSession extends Session
      */
     public function gcSession($maxLifetime): bool
     {
-        $this->dynamoDb->deleteExpired();
+        if ($this->allowGc) {
+            $this->dynamoDb->deleteExpired();
+        }
 
         return true;
     }

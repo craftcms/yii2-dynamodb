@@ -8,7 +8,7 @@ $dynamoDbConfig = [
     'class' => DynamoDbConnection::class,
     'endpoint' => 'http://localhost:8000',
     'region' => 'local',
-    'ttl' => 2,
+    'ttl' => 1,
     'credentials' => [
         'key' => 'local',
         'secret' => 'local',
@@ -40,7 +40,8 @@ return [
         ],
         'session' => [
             'class' => DynamoDbSession::class,
-            'timeout' => 2,
+            'timeout' => 1,
+            'allowGc' => true,
             'dynamoDb' => [
                 'tableName' => 'session-test',
                 'partitionKeyAttribute' => 'id',

@@ -64,14 +64,26 @@ class SessionTest extends TestCase
         $this->assertTrue($stored);
     }
 
-    public function testExpired(): void
+    public function testExpiredRead(): void
     {
-        $id = uniqid('testing-gc-session-', true);
+        $id = uniqid('testing-expired-read-session-', true);
 
         static::getSession()->writeSession($id, 'some-session');
         sleep(static::getSession()->getTimeout() + 1);
         $data = static::getSession()->readSession($id);
 
         $this->assertEquals('', $data);
+    }
+
+    public function testGarbageCollection(): void
+    {
+        $id = uniqid('testing-gc-session-', true);
+
+        static::getSession()->writeSession($id, 'some-session');
+        sleep(static::getSession()->getTimeout() + 1);
+        static::getSession()->gcSession(0);
+        $item = static::getSession()->dynamoDb->getItem($id);
+
+        $this->assertNull($item);
     }
 }
