@@ -2,6 +2,8 @@
 
 namespace pixelandtonic\dynamodb;
 
+use Aws\DynamoDb\Exception\DynamoDbException;
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\caching\Cache;
 use yii\di\Instance;
@@ -34,7 +36,12 @@ class DynamoDbCache extends Cache
      */
     protected function getValue($key)
     {
-        $result = $this->dynamoDb->getItem($key);
+        try {
+            $result = $this->dynamoDb->getItem($key);
+        } catch (DynamoDbException $e) {
+            Yii::error("Unable to get cache value: {$e->getMessage()}", __METHOD__);
+            return false;
+        }
 
         return $result[$this->dataAttribute] ?? false;
     }
@@ -52,7 +59,14 @@ class DynamoDbCache extends Cache
             $data[$this->dynamoDb->ttlAttribute] = $duration;
         }
 
-        return (bool) $this->dynamoDb->updateItem($key, $data);
+        try {
+            $this->dynamoDb->updateItem($key, $data);
+        } catch (DynamoDbException $e) {
+            Yii::error("Unable to set cache value: {$e->getMessage()}", __METHOD__);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -68,7 +82,14 @@ class DynamoDbCache extends Cache
      */
     protected function deleteValue($key): bool
     {
-        return (bool) $this->dynamoDb->deleteItem($key);
+        try {
+            $this->dynamoDb->deleteItem($key);
+        } catch (DynamoDbException $e) {
+            Yii::error("Unable to delete cache value: {$e->getMessage()}", __METHOD__);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -76,7 +97,12 @@ class DynamoDbCache extends Cache
      */
     protected function flushValues(): bool
     {
-        $this->dynamoDb->deleteMany();
+        try {
+            $this->dynamoDb->deleteMany();
+        } catch (DynamoDbException $e) {
+            Yii::error("Unable to flush values: {$e->getMessage()}", __METHOD__);
+            return false;
+        }
 
         return true;
     }

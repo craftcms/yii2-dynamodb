@@ -2,6 +2,7 @@
 
 namespace pixelandtonic\dynamodb;
 
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
 use yii\web\Session;
@@ -52,7 +53,13 @@ class DynamoDbSession extends Session
      */
     public function readSession($id): string
     {
-        $item = $this->dynamoDb->getItem($id);
+        try {
+            $item = $this->dynamoDb->getItem($id);
+        } catch (DynamoDbException $e) {
+            Yii::error("Unable to read session: {$e->getMessage()}", __METHOD__);
+            return '';
+        }
+
         $data = $item[$this->dataAttribute] ?? '';
         $ttl = $item[$this->dynamoDb->ttlAttribute] ?? null;
 
@@ -70,9 +77,16 @@ class DynamoDbSession extends Session
      */
     public function writeSession($id, $data): bool
     {
-        return (bool) $this->dynamoDb->updateItem($id, [
-            $this->dataAttribute => $data,
-        ]);
+        try {
+            $this->dynamoDb->updateItem($id, [
+                $this->dataAttribute => $data,
+            ]);
+        } catch (DynamoDbException $e) {
+            Yii::error("Unable to write session session: {$e->getMessage()}", __METHOD__);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -80,7 +94,14 @@ class DynamoDbSession extends Session
      */
     public function destroySession($id): bool
     {
-        return (bool) $this->dynamoDb->deleteItem($id);
+        try {
+            $this->dynamoDb->deleteItem($id);
+        } catch (DynamoDbException $e) {
+            Yii::error("Unable to destroy expired session: {$e->getMessage()}", __METHOD__);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -89,7 +110,12 @@ class DynamoDbSession extends Session
     public function gcSession($maxLifetime): bool
     {
         if ($this->allowGc) {
-            $this->dynamoDb->deleteExpired();
+            try {
+                $this->dynamoDb->deleteExpired();
+            } catch (DynamoDbException $e) {
+                Yii::error("Unable to delete expired sessions: {$e->getMessage()}", __METHOD__);
+                return false;
+            }
         }
 
         return true;
