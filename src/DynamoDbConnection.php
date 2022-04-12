@@ -5,6 +5,7 @@ namespace pixelandtonic\dynamodb;
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\WriteRequestBatch;
 use Aws\Result;
@@ -49,7 +50,12 @@ class DynamoDbConnection extends Component
         $this->client = $this->getClient();
     }
 
-    public function getItem($key): ?array
+    /**
+     * @param string|array $key The key of the item to retrieve
+     * @return array|null The item, or `null` if not found
+     * @throws DynamoDbException
+     */
+    public function getItem(string|array $key): ?array
     {
         $result = $this->client->getItem([
             'TableName'      => $this->tableName,
@@ -62,7 +68,14 @@ class DynamoDbConnection extends Component
         return $item ? $this->marshaler->unmarshalItem($item) : null;
     }
 
-    public function updateItem($key, array $item = []): Result
+
+    /**
+     * @param string|array $key The key of the item to update
+     * @param array The item attributes to update
+     * @return Result
+     * @throws DynamoDbException
+     */
+    public function updateItem(string|array $key, array $item = []): Result
     {
         return $this->client->updateItem([
             'TableName'        => $this->tableName,
@@ -72,6 +85,11 @@ class DynamoDbConnection extends Component
         ]);
     }
 
+    /**
+     * @param array $item The item attributes
+     * @return Result
+     * @throws DynamoDbException
+     */
     public function putItem(array $item): Result
     {
         return $this->client->updateItem([
@@ -80,7 +98,12 @@ class DynamoDbConnection extends Component
         ]);
     }
 
-    public function deleteItem($key): Result
+    /**
+     * @param string|array $key The key of the item to delete
+     * @return Result
+     * @throws DynamoDbException
+     */
+    public function deleteItem(string|array $key): Result
     {
         return $this->client->deleteItem([
             'TableName' => $this->tableName,
@@ -88,6 +111,10 @@ class DynamoDbConnection extends Component
         ]);
     }
 
+    /**
+     * @return WriteRequestBatch
+     * @throws DynamoDbException
+     */
     public function deleteExpired(): WriteRequestBatch
     {
         return $this->deleteMany([
@@ -102,7 +129,12 @@ class DynamoDbConnection extends Component
         ]);
     }
 
-    public function deleteMany($attributes = []): WriteRequestBatch
+    /**
+     * @param array $attributes Attributes to pass to the scan operation
+     * @return WriteRequestBatch
+     * @throws DynamoDbException
+     */
+    public function deleteMany(array $attributes = []): WriteRequestBatch
     {
         $items = $this->client->getPaginator('Scan', [
             'TableName' => $this->tableName,
