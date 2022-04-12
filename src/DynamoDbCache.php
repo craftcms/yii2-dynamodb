@@ -56,7 +56,7 @@ class DynamoDbCache extends Cache
         ];
 
         if ($duration) {
-            $data[$this->dynamoDb->ttlAttribute] = $duration;
+            $data[$this->dynamoDb->ttlAttribute] = $duration + time();
         }
 
         try {

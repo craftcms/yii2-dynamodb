@@ -27,10 +27,14 @@ class DynamoDbConnection extends Component
     public array $batchConfig = [];
     public ?DynamoDbClient $client = null;
     public string $version = 'latest';
-    public ?int $ttl = null;
     public string $ttlAttribute = 'ttl';
     public Marshaler $marshaler;
     public Closure|null $formatKey = null;
+
+    /**
+     * @var int|null Duration in seconds before an item will expire. Set to `null` for unlimited.
+     */
+    public ?int $ttl = null;
 
     /**
      * @var string|null $endpoint Useful for using DAX, local dev

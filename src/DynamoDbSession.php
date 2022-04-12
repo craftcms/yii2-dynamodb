@@ -2,6 +2,7 @@
 
 namespace pixelandtonic\dynamodb;
 
+use Aws\DynamoDb\Exception\DynamoDbException;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
