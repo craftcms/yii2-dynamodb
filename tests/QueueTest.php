@@ -3,10 +3,14 @@
 namespace tests;
 
 use tests\app\SimpleTestJob;
+use yii\base\InvalidConfigException;
 use yii\queue\Queue;
 
 class QueueTest extends TestCase
 {
+    /**
+     * @throws InvalidConfigException
+     */
     public function testInit(): void
     {
         // Assert
@@ -16,6 +20,9 @@ class QueueTest extends TestCase
 
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function testPushMessage(): void
     {
         // Arrange
@@ -32,6 +39,9 @@ class QueueTest extends TestCase
         $this->assertEquals(Queue::STATUS_WAITING, $status);
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function testRun(): void
     {
         // Arrange
