@@ -66,11 +66,12 @@ class CacheTest extends TestCase
 
     public function testGetValue(): void
     {
+        // Arrange
         $key = uniqid('testing-get-', true);
         $encoded = ['some' => 'value'];
-        static::getCache()->set($key, ['some' => 'value']);
 
         // Act
+        static::getCache()->set($key, ['some' => 'value']);
         $data = static::getCache()->get($key);
 
         // Assert
@@ -80,14 +81,14 @@ class CacheTest extends TestCase
     public function testPutItem(): void
     {
         // Arrange
-        $key = uniqid('testing-put-', true);
-
-        // Act
-        $result = static::getCache()->dynamoDb->putItem([
+        $item = [
             'pk'  => uniqid('testing-put-', true),
             'sk' => uniqid('testing-put-', true),
             'some' => 'value'
-        ]);
+        ];
+
+        // Act
+        $result = static::getCache()->dynamoDb->putItem($item);
 
         // Assert
         $this->assertInstanceOf(Result::class, $result);

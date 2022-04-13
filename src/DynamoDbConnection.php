@@ -96,9 +96,9 @@ class DynamoDbConnection extends Component
      */
     public function putItem(array $item): Result
     {
-        return $this->client->updateItem([
+        return $this->client->putItem([
             'TableName' => $this->tableName,
-            'Item' => $this->_marshalAttributeValues($this->_addTtl($item)),
+            'Item' => $this->marshaler->marshalItem($this->_addTtl($item)),
         ]);
     }
 
