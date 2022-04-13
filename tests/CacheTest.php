@@ -2,6 +2,7 @@
 
 namespace tests\cache;
 
+use Aws\Result;
 use tests\TestCase;
 
 class CacheTest extends TestCase
@@ -11,43 +12,40 @@ class CacheTest extends TestCase
         // Arrange
         $key1 = uniqid('testing-flush-', true);
         $key2 = uniqid('testing-flush-2', true);
-        $cache = static::getCache();
-        $cache->set($key1, ['some' => 'value']);
-        $cache->set($key2, ['another' => 'value']);
+        static::getCache()->set($key1, ['some' => 'value']);
+        static::getCache()->set($key2, ['another' => 'value']);
 
         // Act
-        $cache->flush();
+        static::getCache()->flush();
 
         // Assert
-        $this->assertFalse($cache->exists($key1));
-        $this->assertFalse($cache->exists($key2));
+        $this->assertFalse(static::getCache()->exists($key1));
+        $this->assertFalse(static::getCache()->exists($key2));
     }
 
     public function testDeleteValue(): void
     {
         // Arrange
         $key = uniqid('testing-delete-', true);
-        $cache = static::getCache();
-        $cache->set($key, ['some' => 'value']);
+        static::getCache()->set($key, ['some' => 'value']);
 
         // Act
-        $deleted = $cache->delete($key);
+        $deleted = static::getCache()->delete($key);
 
         // Assert
         $this->assertTrue($deleted);
-        $this->assertFalse($cache->exists($key));
+        $this->assertFalse(static::getCache()->exists($key));
     }
 
     public function testExists(): void
     {
         // Arrange
         $key = uniqid('testing-exists-', true);
-        $cache = static::getCache();
 
         // Act
-        $cache->set($key, ['some' => 'value']);
-        $exists = $cache->exists($key);
-        $doesNotExist = $cache->exists('nothing');
+        static::getCache()->set($key, ['some' => 'value']);
+        $exists = static::getCache()->exists($key);
+        $doesNotExist = static::getCache()->exists('nothing');
 
         // Assert
         $this->assertTrue($exists);
@@ -58,10 +56,9 @@ class CacheTest extends TestCase
     {
         // Arrange
         $key = uniqid('testing-set-', true);
-        $cache = static::getCache();
 
         // Act
-        $saved = $cache->set($key, ['some' => 'value']);
+        $saved = static::getCache()->set($key, ['some' => 'value']);
 
         // Assert
         $this->assertTrue($saved);
@@ -70,14 +67,29 @@ class CacheTest extends TestCase
     public function testGetValue(): void
     {
         $key = uniqid('testing-get-', true);
-        $cache = static::getCache();
         $encoded = ['some' => 'value'];
-        $cache->set($key, ['some' => 'value']);
+        static::getCache()->set($key, ['some' => 'value']);
 
         // Act
-        $data = $cache->get($key);
+        $data = static::getCache()->get($key);
 
         // Assert
         $this->assertEquals($encoded, $data);
+    }
+
+    public function testPutItem(): void
+    {
+        // Arrange
+        $key = uniqid('testing-put-', true);
+
+        // Act
+        $result = static::getCache()->dynamoDb->putItem([
+            'pk'  => uniqid('testing-put-', true),
+            'sk' => uniqid('testing-put-', true),
+            'some' => 'value'
+        ]);
+
+        // Assert
+        $this->assertInstanceOf(Result::class, $result);
     }
 }
