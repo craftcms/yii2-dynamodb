@@ -31,7 +31,7 @@ return [
                 'tableName' => 'cache-test',
                 'sortKeyAttribute' => 'sk',
                 'formatKey' => static function($key) {
-                    return [
+                    return is_array($key) ? $key : [
                         'pk' => substr(md5(Yii::$app->id), 0, 5),
                         'sk' => $key,
                     ];
