@@ -29,11 +29,11 @@ return [
             'class' => DynamoDbCache::class,
             'dynamoDb' => [
                 'tableName' => 'cache-test',
-                'sortKeyAttribute' => 'sk',
+                'sortKeyAttribute' => 'SK',
                 'formatKey' => static function($key) {
                     return is_array($key) ? $key : [
-                        'pk' => substr(md5(Yii::$app->id), 0, 5),
-                        'sk' => $key,
+                        'PK' => substr(md5(Yii::$app->id), 0, 5),
+                        'SK' => $key,
                     ];
                 }
             ] + $dynamoDbConfig,

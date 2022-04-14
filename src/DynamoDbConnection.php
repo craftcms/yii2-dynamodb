@@ -12,6 +12,7 @@ use Aws\Result;
 use Closure;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;
+use yii\base\InvalidConfigException;
 
 /**
  *
@@ -21,13 +22,13 @@ use yii\base\InvalidArgumentException;
 class DynamoDbConnection extends Component
 {
     public string $tableName;
-    public string $partitionKeyAttribute = 'pk';
+    public string $partitionKeyAttribute = 'PK';
     public ?string $sortKeyAttribute = null;
     public bool $consistentRead = true;
     public array $batchConfig = [];
     public ?DynamoDbClient $client = null;
     public string $version = 'latest';
-    public string $ttlAttribute = 'ttl';
+    public string $ttlAttribute = 'TTL';
     public Marshaler $marshaler;
     public Closure|null $formatKey = null;
 
@@ -46,12 +47,17 @@ class DynamoDbConnection extends Component
 
     /**
      * @inheritDoc
+     * @throws InvalidConfigException
      */
     public function init(): void
     {
         parent::init();
         $this->marshaler = $this->getMarshaler();
         $this->client = $this->getClient();
+
+        if (!isset($this->dynamoDb->tableName)) {
+            throw new InvalidConfigException('The “tableName” property must be set.');
+        }
     }
 
     /**

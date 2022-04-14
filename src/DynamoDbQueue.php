@@ -22,7 +22,6 @@ class DynamoDbQueue extends Queue
     {
         parent::init();
         $this->dynamoDb = Instance::ensure($this->dynamoDb, DynamoDbConnection::class);
-        $this->dynamoDb->tableName = $this->dynamoDb->tableName ?? 'queue';
     }
 
     /**

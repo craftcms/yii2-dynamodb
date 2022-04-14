@@ -14,7 +14,7 @@ class QueueTest extends TestCase
     public function testInit(): void
     {
         // Assert
-        $this->assertEquals('pk', static::getQueue()->dynamoDb->partitionKeyAttribute);
+        $this->assertEquals('PK', static::getQueue()->dynamoDb->partitionKeyAttribute);
         $this->assertEquals('job', static::getQueue()->dataAttribute);
         $this->assertEquals('queue-test', static::getQueue()->dynamoDb->tableName);
 
@@ -35,7 +35,7 @@ class QueueTest extends TestCase
 
         // Assert
         $this->assertNotNull($id);
-        $this->assertStringStartsWith('queue-prefix#', $item['pk']);
+        $this->assertStringStartsWith('queue-prefix#', $item['PK']);
         $this->assertEquals(Queue::STATUS_WAITING, $status);
     }
 

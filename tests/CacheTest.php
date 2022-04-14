@@ -82,8 +82,8 @@ class CacheTest extends TestCase
     {
         // Arrange
         $item = [
-            'pk'  => uniqid('testing-put-', true),
-            'sk' => uniqid('testing-put-', true),
+            'PK'  => uniqid('testing-put-', true),
+            'SK' => uniqid('testing-put-', true),
             'some' => 'value'
         ];
 

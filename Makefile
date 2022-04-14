@@ -13,11 +13,11 @@ cache:
 	aws --endpoint-url=${ENDPOINT_URL} --region=${REGION} \
 	dynamodb create-table --table-name ${CACHE_TABLE_NAME} \
 	--attribute-definitions \
-		AttributeName=pk,AttributeType=S \
-		AttributeName=sk,AttributeType=S \
+		AttributeName=PK,AttributeType=S \
+		AttributeName=SK,AttributeType=S \
 	--key-schema \
-		AttributeName=pk,KeyType=HASH \
-		AttributeName=sk,KeyType=RANGE \
+		AttributeName=PK,KeyType=HASH \
+		AttributeName=SK,KeyType=RANGE \
 	--provisioned-throughput \
 		ReadCapacityUnits=5,WriteCapacityUnits=5
 sessions:
@@ -33,9 +33,9 @@ queue:
 	aws --endpoint-url=${ENDPOINT_URL} --region=${REGION} \
 	dynamodb create-table --table-name=${QUEUE_TABLE_NAME} \
 	--attribute-definitions \
-		AttributeName=pk,AttributeType=S \
+		AttributeName=PK,AttributeType=S \
 	--key-schema \
-		AttributeName=pk,KeyType=HASH \
+		AttributeName=PK,KeyType=HASH \
 	--provisioned-throughput \
 		ReadCapacityUnits=5,WriteCapacityUnits=5
 tables: configure cache sessions queue
