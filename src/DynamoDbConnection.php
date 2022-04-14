@@ -55,7 +55,7 @@ class DynamoDbConnection extends Component
         $this->marshaler = $this->getMarshaler();
         $this->client = $this->getClient();
 
-        if (!isset($this->dynamoDb->tableName)) {
+        if (!isset($this->tableName)) {
             throw new InvalidConfigException('The “tableName” property must be set.');
         }
     }
