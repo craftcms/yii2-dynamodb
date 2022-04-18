@@ -84,7 +84,7 @@ class CacheTest extends TestCase
         $item = [
             'PK'  => uniqid('testing-put-', true),
             'SK' => uniqid('testing-put-', true),
-            'some' => 'value'
+            'some' => 'value',
         ];
 
         // Act

@@ -68,8 +68,8 @@ class DynamoDbConnection extends Component
     public function getItem(string|array $key): ?array
     {
         $result = $this->client->getItem([
-            'TableName'      => $this->tableName,
-            'Key'            => $this->formatKey($key),
+            'TableName' => $this->tableName,
+            'Key' => $this->formatKey($key),
             'ConsistentRead' => $this->consistentRead,
         ]);
 
@@ -88,10 +88,10 @@ class DynamoDbConnection extends Component
     public function updateItem(string|array $key, array $item = []): Result
     {
         return $this->client->updateItem([
-            'TableName'        => $this->tableName,
-            'Key'              => $this->formatKey($key),
+            'TableName' => $this->tableName,
+            'Key' => $this->formatKey($key),
             'AttributeUpdates' => $this->_marshalAttributeValues($this->_addTtl($item)),
-            'ReturnValues'     => 'ALL_NEW',
+            'ReturnValues' => 'ALL_NEW',
         ]);
     }
 
@@ -117,7 +117,7 @@ class DynamoDbConnection extends Component
     {
         return $this->client->deleteItem([
             'TableName' => $this->tableName,
-            'Key'       => $this->formatKey($key),
+            'Key' => $this->formatKey($key),
         ]);
     }
 
@@ -135,7 +135,7 @@ class DynamoDbConnection extends Component
                         $this->marshaler->marshalValue(time()),
                     ],
                 ],
-            ]
+            ],
         ]);
     }
 

@@ -7,7 +7,6 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
 use yii\queue\cli\Queue;
-use yii\queue\sqs\DynamoDbQueueCommand;
 
 class DynamoDbQueue extends Queue
 {
