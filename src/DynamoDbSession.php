@@ -10,7 +10,7 @@ use yii\web\Session;
 
 class DynamoDbSession extends Session
 {
-    public DynamoDBConnection|string|array $dynamoDb = 'dynamoDb';
+    public DynamoDbConnection|string|array $dynamoDb = 'dynamoDb';
     public string $dataAttribute = 'data';
 
     /**

@@ -10,7 +10,7 @@ use yii\queue\cli\Queue;
 
 class DynamoDbQueue extends Queue
 {
-    public DynamoDBConnection|string|array $dynamoDb = 'dynamoDb';
+    public DynamoDbConnection|string|array $dynamoDb = 'dynamoDb';
     public string $dataAttribute = 'data';
 
     /**

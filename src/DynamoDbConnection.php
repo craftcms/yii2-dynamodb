@@ -81,7 +81,7 @@ class DynamoDbConnection extends Component
 
     /**
      * @param string|array $key The key of the item to update
-     * @param array The item attributes to update
+     * @param array $item The item attributes to update
      * @return Result
      * @throws DynamoDbException
      */
