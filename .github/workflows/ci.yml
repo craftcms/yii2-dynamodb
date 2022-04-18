@@ -13,8 +13,8 @@ jobs:
     uses: craftcms/.github/.github/workflows/phpstan.yml@v1
     with:
       php_version: '8.0'
-    runs-on: ubuntu-latest
   phpunit:
+    runs-on: ubuntu-latest
     name: PHPUnit
     steps:
       - uses: actions/checkout@v1
