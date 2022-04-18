@@ -54,12 +54,6 @@
     "fix-cs": "ecs check --ansi --fix",
     "phpstan": "phpstan --memory-limit=1G"
   },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://asset-packagist.org"
-    }
-  ],
   "config": {
     "allow-plugins": {
       "yiisoft/yii2-composer": true
