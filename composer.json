@@ -61,5 +61,13 @@
     "platform": {
       "php": "8.0.2"
     }
+  },
+  "provide": {
+    "bower-asset/jquery": "*",
+    "bower-asset/inputmask": "*",
+    "bower-asset/punycode": "*",
+    "bower-asset/yii2-pjax": "*",
+    "bower-asset/bootstrap": "*",
+    "bower-asset/typeahead.js": "*"
   }
 }
