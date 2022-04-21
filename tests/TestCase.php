@@ -2,7 +2,7 @@
 
 namespace tests;
 
-use pixelandtonic\dynamodb\DynamoDbQueue;
+use craftcms\dynamodb\DynamoDbQueue;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\caching\CacheInterface;

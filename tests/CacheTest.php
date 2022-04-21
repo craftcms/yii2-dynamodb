@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\cache;
+namespace tests;
 
 use Aws\Result;
 use tests\TestCase;
