@@ -18,7 +18,7 @@ composer require pixelandtonic/yii2-dynamodb
 
 ## Usage
 
-This package provides three drivers for DynamoDB; caching, sessions, and queuing.
+This package provides three Yii components for DynamoDB; caching, sessions, and queuing.
 
 ### Cache Component
 
@@ -40,7 +40,7 @@ aws dynamodb create-table --table-name=my-app-cache-table \
 In your `app.php`, configure the `cache` component to use the driver.
 
 ```php
-use \pixelandtonic\dynamodb\drivers\DynamoDbCache;
+use craftcms\dynamodb\DynamoDbCache;
 
 return [
     'bootstrap' => [
@@ -81,7 +81,7 @@ aws dynamodb create-table --table-name=my-app-session-table \
 In your `app.php`, configure the `session` component to use the driver.
 
 ```php
-use \pixelandtonic\dynamodb\drivers\DynamoDbSession;
+use craftcms\dynamodb\DynamoDbSession;
 
 return [
     'bootstrap' => [
@@ -122,7 +122,7 @@ aws dynamodb create-table --table-name=my-app-queue-table \
 In your `app.php`, configure the `queue` component to use the driver.
 
 ```php
-use \pixelandtonic\dynamodb\drivers\DynamoDbQueue;
+use craftcms\dynamodb\DynamoDbQueue;
 
 return [
     'bootstrap' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelandtonic\dynamodb;
+namespace craftcms\dynamodb;
 
 use Aws\DynamoDb\Exception\DynamoDbException;
 use Yii;

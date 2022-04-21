@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelandtonic\dynamodb;
+namespace craftcms\dynamodb;
 
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;

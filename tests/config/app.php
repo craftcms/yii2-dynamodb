@@ -1,8 +1,8 @@
 <?php
-use pixelandtonic\dynamodb\DynamoDbCache;
-use pixelandtonic\dynamodb\DynamoDbConnection;
-use pixelandtonic\dynamodb\DynamoDbQueue;
-use pixelandtonic\dynamodb\DynamoDbSession;
+use craftcms\dynamodb\DynamoDbCache;
+use craftcms\dynamodb\DynamoDbConnection;
+use craftcms\dynamodb\DynamoDbQueue;
+use craftcms\dynamodb\DynamoDbSession;
 
 $dynamoDbConfig = [
     'class' => DynamoDbConnection::class,
