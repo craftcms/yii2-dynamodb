@@ -1,0 +1,7 @@
+{
+  "name": "@craftcms/yii2-dynamodb",
+  "private": true,
+  "devDependencies": {
+    "prettier": "2.6.2"
+  }
+}
