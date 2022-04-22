@@ -56,11 +56,11 @@ return [
                 'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
                 'region' => '<region>', // optional: defaults to AWS_REGION env var
                 'ttl' => 60*60*24, // optional: number of seconds until items are considered expired
-                'ttlAttribute' => 'expires' // optional: defaults to 'TTL' 
+                'ttlAttribute' => 'expires' // optional: defaults to 'TTL'
                 'credentials' => [
                     'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
                     'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
-                ],            
+                ],
             ],
         ],
     ],
@@ -103,11 +103,11 @@ return [
                 'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
                 'region' => '<region>', // optional: defaults to AWS_REGION env var
                 'ttl' => 60*60*24, // optional: number of seconds until items are considered expired
-                'ttlAttribute' => 'expires' // optional: defaults to 'TTL' 
+                'ttlAttribute' => 'expires' // optional: defaults to 'TTL'
                 'credentials' => [
                     'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
                     'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
-                ],            
+                ],
             ],
         ],
     ],
@@ -149,11 +149,11 @@ return [
                 'endpoint' => 'http://localhost:8000', // optional: used for local or when using DAX
                 'region' => '<region>', // optional: defaults to AWS_REGION env var
                 'ttl' => 60*60*24, // optional: number of seconds until items are considered expired
-                'ttlAttribute' => 'expires' // optional: defaults to 'TTL' 
+                'ttlAttribute' => 'expires' // optional: defaults to 'TTL'
                 'credentials' => [
                     'key' => '<key>', // optional: defaults to AWS_ACCESS_KEY_ID env var
                     'secret' => '<secret>', // optional: defaults to AWS_SECRET_ACCESS_KEY env var
-                ],            
+                ],
             ],
         ],
     ],
@@ -169,7 +169,7 @@ Tests run against local DynamoDB tables using Docker. To run tests, you must run
 3. Create the DynamoDB tables for the [cache](#create-dynamodb-cache-table), [session](#create-dynamodb-session-table), and [queue](#create-dynamodb-queue-table)
 4. Run the test suite with `vendor/bin/phpunit --testdox`
 
-To make the setup and testing easier, you can run the following Composer scripts: 
+To make the setup and testing easier, you can run the following Composer scripts:
 
 1. `composer run setup`
 2. `composer run test`
