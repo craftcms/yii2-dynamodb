@@ -2,23 +2,29 @@
 
 namespace tests;
 
+use craftcms\dynamodb\DynamoDbQueue;
+use Yii;
+use yii\base\InvalidConfigException;
 use yii\caching\CacheInterface;
 use yii\web\Session;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function getCache(): CacheInterface
+    protected static function getCache(): CacheInterface
     {
-        return \Yii::$app->getCache();
+        return Yii::$app->getCache();
     }
 
-    protected function getSession(): Session
+    protected static function getSession(): Session
     {
-        return \Yii::$app->getSession();
+        return Yii::$app->getSession();
     }
 
-    protected function getQueue(string $id = 'queue')
+    /**
+     * @throws InvalidConfigException
+     */
+    protected static function getQueue(string $id = 'queue'): DynamoDbQueue
     {
-        return \Yii::$app->get($id);
+        return Yii::$app->get($id);
     }
 }

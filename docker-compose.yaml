@@ -7,7 +7,7 @@ services:
     volumes:
       - dynamodb_data:/home/dynamodblocal
     working_dir: /home/dynamodblocal
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ."
+    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath .'
   gui:
     image: aaronshaf/dynamodb-admin
     ports:
