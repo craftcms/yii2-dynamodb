@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/craftcms/yii2-dynamodb.svg?style=flat-square)](https://packagist.org/packages/craftcms/yii2-dynamodb)
 [![Total Downloads](https://img.shields.io/packagist/dt/craftcms/yii2-dynamodb.svg?style=flat-square)](https://packagist.org/packages/craftcms/yii2-dynamodb)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/craftcms/yii2-dynamodb/run-tests?label=tests)](https://github.com/craftcms/yii2-dynamodb/actions?query=workflow%3Aci+branch%3Amaster)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/craftcms/yii2-dynamodb/run-tests?label=tests)](https://github.com/craftcms/yii2-dynamodb/actions?query=workflow%3Aci+branch%3Amain)
 
 Easily use DynamoDB as a [cache](https://www.yiiframework.com/doc/guide/2.0/en/caching-overview), [session](https://www.yiiframework.com/doc/guide/2.0/en/runtime-sessions-cookies), or [queue](https://github.com/yiisoft/yii2-queue) using this library in your Yii2 or Craft CMS projects.
 
