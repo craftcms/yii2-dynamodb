@@ -30,7 +30,8 @@
   "require-dev": {
     "phpunit/phpunit": "^8.5",
     "craftcms/ecs": "dev-main",
-    "craftcms/phpstan": "dev-main"
+    "craftcms/phpstan": "dev-main",
+    "craftcms/rector": "dev-main"
   },
   "autoload": {
     "psr-4": {
