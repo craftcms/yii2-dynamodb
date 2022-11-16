@@ -3,65 +3,23 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - develop
   pull_request:
 permissions:
   contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  ecs:
-    name: ECS
-    uses: craftcms/.github/.github/workflows/ecs.yml@v2
+  ci:
+    name: ci
+    uses: craftcms/.github/.github/workflows/ci.yml@v3
     with:
-      php_version: '8.0'
-  phpstan:
-    name: PHPStan
-    uses: craftcms/.github/.github/workflows/phpstan.yml@v2
-    with:
-      php_version: '8.0'
-  prettier:
-    name: Prettier
-    uses: craftcms/.github/.github/workflows/prettier.yml@v2
-  phpunit:
-    runs-on: ubuntu-latest
-    needs: [ecs, prettier, phpstan]
-    name: PHPUnit
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: Validate composer.json
-        run: composer validate
-
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache/files
-          key: dependencies-composer-${{ hashFiles('composer.json') }}
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      - name: Setup DynamoDB
-        run: docker-compose up -d dynamodb
-
-      - name: Create DynamoDB tables
-        run: make tables
-        env:
-          AWS_REGION: local
-          AWS_ACCESS_KEY_ID: local
-          AWS_SECRET_ACCESS_KEY: local
-
-      - name: Run test suite
-        run: composer run-script test
-
-  notify-slack:
-    name: Notify Slack
-    needs: [ecs, phpstan, prettier, phpunit]
-    if: ${{ always() }}
-    uses: craftcms/.github/.github/workflows/notify-slack.yml@v2
-    with:
-      success: ${{ needs.ecs.result == 'success' && needs.prettier.result == 'success' && needs.phpstan.result == 'success' && needs.phpunit.result == 'success'}}
-      failure: ${{ needs.ecs.result == 'failure' || needs.prettier.result == 'failure' || needs.codecept.result == 'failure' || needs.phpunit.result == 'failure'}}
-      failure_text_prefix: <!subteam^SGFL9NKNZ>
+      craft_version: '4'
+      jobs: '["ecs", "phpstan", "prettier", "tests"]'
+      notify_slack: true
+      slack_subteam: <!subteam^SGFL9NKNZ>
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
-      slack_webhook_url: ${{ secrets.SLACK_CRAFT_WEBHOOK_URL }}
+      slack_webhook_url: ${{ secrets.SLACK_PLUGIN_WEBHOOK_URL }}
